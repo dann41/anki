@@ -1,6 +1,0 @@
-card question|card answer
-Q1|A1
-Q2|
-|A3
-Q4|A4
-Q5|A5

@@ -2,3 +2,5 @@
 .idea
 anki.iml
 /target/
+/core/target/
+/cmd/target/
