@@ -1,13 +1,15 @@
 package com.dann41.anki.cmd.intrastructure.presentation;
 
-import com.dann41.anki.cmd.intrastructure.AppContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ConsoleView;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Starter {
 
-  private final AppContext appContext;
+  private final ApplicationContext appContext;
 
-  public Starter(AppContext appContext) {
+  public Starter(ApplicationContext appContext) {
     this.appContext = appContext;
   }
 

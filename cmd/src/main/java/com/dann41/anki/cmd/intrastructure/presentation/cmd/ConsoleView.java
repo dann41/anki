@@ -91,15 +91,16 @@ public class ConsoleView implements View {
   }
 
   public void countDown(String message, int seconds) {
-    System.out.print(message);
-    for (int i = seconds; i > 0; i--) {
-      try {
-        Thread.sleep(i);
-        System.out.print(" ..." + i);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
+    try {
+      System.out.println(message);
+      for (int i = seconds; i > 1; i--) {
+        System.out.print(i + "...");
+        Thread.sleep(1000L);
       }
+      System.out.println(1);
+      Thread.sleep(1000L);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
     }
-
   }
 }

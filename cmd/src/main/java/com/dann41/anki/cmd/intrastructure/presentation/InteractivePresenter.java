@@ -1,6 +1,5 @@
 package com.dann41.anki.cmd.intrastructure.presentation;
 
-import com.dann41.anki.cmd.intrastructure.AppContext;
 import com.dann41.anki.core.application.cardpicker.CardPicker;
 import com.dann41.anki.core.application.cardpicker.CardResponse;
 import com.dann41.anki.core.application.cardsolver.CardSolver;
@@ -12,13 +11,14 @@ import com.dann41.anki.core.application.sessionstarter.StartSessionCommand;
 import com.dann41.anki.core.application.statefinder.StateFinder;
 import com.dann41.anki.core.application.statefinder.StateResponse;
 import com.dann41.anki.core.domain.deck.DeckNotFoundException;
+import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class InteractivePresenter implements Presenter {
-  private final AppContext appContext;
+  private final ApplicationContext appContext;
   private View view;
   private final String deckId;
   private static final Map<String, String> BOX_MAPPER = new HashMap<>();
@@ -29,7 +29,7 @@ public class InteractivePresenter implements Presenter {
     BOX_MAPPER.put("r", "red");
   }
 
-  public InteractivePresenter(String deckId, AppContext appContext) {
+  public InteractivePresenter(String deckId, ApplicationContext appContext) {
     // TODO inject use cases instead of AppContext
     this.deckId = deckId;
     this.appContext = appContext;
@@ -49,18 +49,18 @@ public class InteractivePresenter implements Presenter {
   }
 
   private void startSession() {
-    SessionStarter sessionStarter = appContext.get(SessionStarter.class);
+    SessionStarter sessionStarter = appContext.getBean(SessionStarter.class);
     try {
       sessionStarter.execute(new StartSessionCommand(deckId));
     } catch (DeckNotFoundException e) {
-      DeckCreator deckCreator = appContext.get(DeckCreator.class);
+      DeckCreator deckCreator = appContext.getBean(DeckCreator.class);
       deckCreator.execute(new CreateDeckCommand(deckId));
       sessionStarter.execute(new StartSessionCommand(deckId));
     }
   }
 
   private AnkiState retrieveState() {
-    StateFinder stateFinder = appContext.get(StateFinder.class);
+    StateFinder stateFinder = appContext.getBean(StateFinder.class);
     StateResponse stateResponse = stateFinder.execute(deckId);
     return toAnkiState(stateResponse);
   }
@@ -90,7 +90,7 @@ public class InteractivePresenter implements Presenter {
   }
 
   private CardResponse getNextCard() {
-    CardPicker cardPicker = appContext.get(CardPicker.class);
+    CardPicker cardPicker = appContext.getBean(CardPicker.class);
     return cardPicker.execute(deckId);
   }
 
@@ -113,7 +113,7 @@ public class InteractivePresenter implements Presenter {
       return;
     }
 
-    CardSolver cardSolver = appContext.get(CardSolver.class);
+    CardSolver cardSolver = appContext.getBean(CardSolver.class);
     cardSolver.execute(new SolveCardCommand(deckId, cardId, boxName));
 
     displayNextCard();
