@@ -3,14 +3,12 @@ package com.dann41.anki.core.domain.deck;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class Session {
-  private final LocalDate lastSession;
+public record Session(LocalDate lastSession) {
 
-  public Session(LocalDate lastSession) {
+  public Session {
     if (lastSession == null) {
       throw new IllegalArgumentException("Session cannot have a null date");
     }
-    this.lastSession = lastSession;
   }
 
   public static Session fromDate(LocalDate lastSession) {

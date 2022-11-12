@@ -8,11 +8,9 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
-public class Box {
-  private final Queue<CardId> cards;
-
+public record Box(Queue<CardId> cards) {
   public Box(List<CardId> cards) {
-    this.cards = new ConcurrentLinkedQueue<>(cards);
+    this(new ConcurrentLinkedQueue<>(cards));
   }
 
   public static Box create(List<String> idList) {
