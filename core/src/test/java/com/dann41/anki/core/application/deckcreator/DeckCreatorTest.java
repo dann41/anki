@@ -1,9 +1,12 @@
 package com.dann41.anki.core.application.deckcreator;
 
+import com.dann41.anki.core.application.deck.deckcreator.CollectionNotFoundException;
 import com.dann41.anki.core.application.deck.deckcreator.CreateDeckCommand;
 import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
-import com.dann41.anki.core.domain.card.Card;
-import com.dann41.anki.core.domain.card.CardRepository;
+import com.dann41.anki.core.domain.card.CardDTO;
+import com.dann41.anki.core.domain.cardcollection.CardCollection;
+import com.dann41.anki.core.domain.cardcollection.CardCollectionId;
+import com.dann41.anki.core.domain.cardcollection.CardCollectionRepository;
 import com.dann41.anki.core.domain.deck.Deck;
 import com.dann41.anki.core.domain.deck.DeckAlreadyExistsException;
 import com.dann41.anki.core.domain.deck.DeckId;
@@ -26,25 +29,17 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class DeckCreatorTest {
   private static final DeckId DECK_ID = new DeckId("1234");
+  private static final String COLLECTION_ID = "arts";
   @Mock
   private DeckRepository deckRepository;
   @Mock
-  private CardRepository cardRepository;
+  private CardCollectionRepository cardCollectionRepository;
   @InjectMocks
   private DeckCreator deckCreator;
 
   @Test
-  public void shouldCreateDeck() {
-    CreateDeckCommand command = new CreateDeckCommand(DECK_ID.value());
-
-    deckCreator.execute(command);
-
-    verifyDeckSaved();
-  }
-
-  @Test
   public void shouldCreateDeskWithCardCatalog() {
-    CreateDeckCommand command = new CreateDeckCommand(DECK_ID.value());
+    CreateDeckCommand command = new CreateDeckCommand(DECK_ID.value(), COLLECTION_ID);
     givenCardCatalog();
 
     deckCreator.execute(command);
@@ -53,20 +48,34 @@ public class DeckCreatorTest {
   }
 
   @Test
+  public void shouldThrowExceptionWhenCatalogDoesNotExist() {
+    CreateDeckCommand command = new CreateDeckCommand(DECK_ID.value(), COLLECTION_ID);
+
+    assertThatThrownBy(() -> deckCreator.execute(command))
+        .isInstanceOf(CollectionNotFoundException.class);
+  }
+
+  @Test
   public void shouldThrowExceptionWhenDeckAlreadyExists() {
     givenExistingDeck();
-    CreateDeckCommand command = new CreateDeckCommand(DECK_ID.value());
+    CreateDeckCommand command = new CreateDeckCommand(DECK_ID.value(), COLLECTION_ID);
 
     assertThatThrownBy(() -> deckCreator.execute(command))
         .isInstanceOf(DeckAlreadyExistsException.class);
   }
 
   private void givenCardCatalog() {
-    given(cardRepository.getAll()).willReturn(
-        Collections.singletonList(
-            new Card("question", "answer")
-        )
-    );
+    given(cardCollectionRepository.findById(new CardCollectionId(COLLECTION_ID)))
+        .willReturn(
+            new CardCollection(
+                COLLECTION_ID,
+                COLLECTION_ID,
+                COLLECTION_ID,
+                Collections.singletonList(
+                    new CardDTO("question", "answer")
+                )
+            )
+        );
   }
 
   private void givenExistingDeck() {
@@ -88,7 +97,7 @@ public class DeckCreatorTest {
 
     Deck savedDeck = captor.getValue();
     assertThat(savedDeck.id()).isEqualTo(DECK_ID);
-    assertThat(savedDeck.unplayedCards()).containsExactly("question");
+    assertThat(savedDeck.unansweredCards()).containsExactly("question");
   }
 
 }

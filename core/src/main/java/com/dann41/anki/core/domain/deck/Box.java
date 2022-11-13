@@ -8,39 +8,39 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
-public record Box(Queue<CardId> cards) {
-  public Box(List<CardId> cards) {
+public record Box(Queue<QuestionId> cards) {
+  public Box(List<QuestionId> cards) {
     this(new ConcurrentLinkedQueue<>(cards));
   }
 
   public static Box create(List<String> idList) {
-    return new Box(idList.stream().map(CardId::new).collect(Collectors.toList()));
+    return new Box(idList.stream().map(QuestionId::new).collect(Collectors.toList()));
   }
 
-  public Collection<CardId> pullAllCards() {
-    Collection<CardId> cardsCollection = new ArrayList<>(cards);
+  public Collection<QuestionId> pullAllCards() {
+    Collection<QuestionId> cardsCollection = new ArrayList<>(cards);
     cards.clear();
     return cardsCollection;
   }
 
   public String pickNextCard() {
-    return Optional.ofNullable(cards.peek()).map(CardId::value).orElse(null);
+    return Optional.ofNullable(cards.peek()).map(QuestionId::value).orElse(null);
   }
 
-  public void placeCard(CardId cardId) {
-    cards.add(cardId);
+  public void placeCard(QuestionId questionId) {
+    cards.add(questionId);
   }
 
-  public boolean containsCard(CardId cardId) {
-    return cards.contains(cardId);
+  public boolean containsCard(QuestionId questionId) {
+    return cards.contains(questionId);
   }
 
-  public void removeCard(CardId cardId) {
-    cards.remove(cardId);
+  public void removeCard(QuestionId questionId) {
+    cards.remove(questionId);
   }
 
   public void moveCardsTo(Box box) {
-    CardId card;
+    QuestionId card;
     while((card = cards.poll()) != null) {
       box.placeCard(card);
     }

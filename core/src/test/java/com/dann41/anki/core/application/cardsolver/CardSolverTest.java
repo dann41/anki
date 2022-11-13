@@ -108,7 +108,7 @@ public class CardSolverTest {
 
   private void givenExistingDeckWithoutUnplayedCards() {
     given(deckRepository.findById(new DeckId(DECK_ID)))
-        .willReturn(DeckMother.withoutUnplayed());
+        .willReturn(DeckMother.withoutUnanswered());
   }
 
   private void givenExistingDeckWithOldSession() {
@@ -121,7 +121,7 @@ public class CardSolverTest {
     verify(deckRepository, times(1)).save(captor.capture());
 
     Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unplayedCards()).doesNotContain("A");
+    assertThat(savedDeck.unansweredCards()).doesNotContain("A");
     assertThat(savedDeck.cardsInGreenBox()).last().isEqualTo("A");
   }
 

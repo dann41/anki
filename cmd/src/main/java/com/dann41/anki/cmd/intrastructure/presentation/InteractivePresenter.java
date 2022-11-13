@@ -21,6 +21,7 @@ public class InteractivePresenter implements Presenter {
   private final ApplicationContext appContext;
   private View view;
   private final String deckId;
+  private final String collectionId;
   private static final Map<String, String> BOX_MAPPER = new HashMap<>();
 
   static {
@@ -29,9 +30,10 @@ public class InteractivePresenter implements Presenter {
     BOX_MAPPER.put("r", "red");
   }
 
-  public InteractivePresenter(String deckId, ApplicationContext appContext) {
+  public InteractivePresenter(String deckId, String collectionId, ApplicationContext appContext) {
     // TODO inject use cases instead of AppContext
     this.deckId = deckId;
+    this.collectionId = collectionId;
     this.appContext = appContext;
   }
 
@@ -54,7 +56,7 @@ public class InteractivePresenter implements Presenter {
       sessionStarter.execute(new StartSessionCommand(deckId));
     } catch (DeckNotFoundException e) {
       DeckCreator deckCreator = appContext.getBean(DeckCreator.class);
-      deckCreator.execute(new CreateDeckCommand(deckId));
+      deckCreator.execute(new CreateDeckCommand(deckId, collectionId));
       sessionStarter.execute(new StartSessionCommand(deckId));
     }
   }

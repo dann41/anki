@@ -12,25 +12,28 @@ public class Deck {
   public static final String RED_BOX = "red";
 
   private final DeckId id;
-  private final List<CardId> unplayedCards;
+  private final Questions questions;
+  private final List<QuestionId> nonAnsweredCards;
   private final Box redBox;
   private final Box orangeBox;
   private final Box greenBox;
   private Session session;
 
-  public Deck(DeckId id, List<CardId> unplayedCards, Box redBox, Box orangeBox, Box greenBox, Session session) {
+  public Deck(DeckId id, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session) {
     this.id = id;
-    this.unplayedCards = unplayedCards;
+    this.questions = new Questions(question);
+    this.nonAnsweredCards = nonAnsweredCards;
     this.redBox = redBox;
     this.orangeBox = orangeBox;
     this.greenBox = greenBox;
     this.session = session;
   }
 
-  public static Deck create(String deckId, List<String> nonPlayedCards) {
+  public static Deck create(String deckId, List<Question> cards) {
     return new Deck(
         new DeckId(deckId),
-        toCardIdList(nonPlayedCards),
+        cards,
+        toQuestionIdFromQuestion(cards),
         Box.create(Collections.emptyList()),
         Box.create(Collections.emptyList()),
         Box.create(Collections.emptyList()),
@@ -40,6 +43,7 @@ public class Deck {
 
   public static Deck restore(
       String deckId,
+      List<Question> questions,
       List<String> nonPlayedCards,
       List<String> cardsInRedBox,
       List<String> cardsInOrangeBox,
@@ -48,7 +52,8 @@ public class Deck {
   ) {
     return new Deck(
         new DeckId(deckId),
-        toCardIdList(nonPlayedCards),
+        questions,
+        toQuestionIdList(nonPlayedCards),
         Box.create(cardsInRedBox),
         Box.create(cardsInOrangeBox),
         Box.create(cardsInGreenBox),
@@ -56,24 +61,38 @@ public class Deck {
     );
   }
 
+  private static List<QuestionId> toQuestionIdFromQuestion(List<Question> questions) {
+    return questions.stream()
+        .map(question -> new QuestionId(question.question()))
+        .collect(Collectors.toList());
+  }
+
+  private static List<QuestionId> toQuestionIdList(List<String> questionIds) {
+    return questionIds.stream().map(QuestionId::new).collect(Collectors.toList());
+  }
+
   public DeckId id() {
     return id;
   }
 
-  public List<String> unplayedCards() {
-    return unplayedCards.stream().map(CardId::value).collect(Collectors.toList());
+  public List<Question> questions() {
+    return questions.value();
+  }
+
+  public List<String> unansweredCards() {
+    return nonAnsweredCards.stream().map(QuestionId::value).collect(Collectors.toList());
   }
 
   public List<String> cardsInRedBox() {
-    return redBox.pullAllCards().stream().map(CardId::value).collect(Collectors.toList());
+    return redBox.pullAllCards().stream().map(QuestionId::value).collect(Collectors.toList());
   }
 
   public List<String> cardsInOrangeBox() {
-    return orangeBox.pullAllCards().stream().map(CardId::value).collect(Collectors.toList());
+    return orangeBox.pullAllCards().stream().map(QuestionId::value).collect(Collectors.toList());
   }
 
   public List<String> cardsInGreenBox() {
-    return greenBox.pullAllCards().stream().map(CardId::value).collect(Collectors.toList());
+    return greenBox.pullAllCards().stream().map(QuestionId::value).collect(Collectors.toList());
   }
 
   public LocalDate session() {
@@ -115,18 +134,14 @@ public class Deck {
     }
   }
 
-  private static List<CardId> toCardIdList(List<String> idList) {
-    return idList.stream().map(CardId::new).collect(Collectors.toList());
-  }
-
   public String pickNextCardId(LocalDate today) {
     if (!isTodaySession(today)) {
       throw new SessionNotStartedException(id);
     }
 
-    if (!unplayedCards.isEmpty()) {
-      CardId cardId = unplayedCards.get(0);
-      return cardId.value();
+    if (!nonAnsweredCards.isEmpty()) {
+      QuestionId questionId = nonAnsweredCards.get(0);
+      return questionId.value();
     }
 
     return redBox.pickNextCard();
@@ -138,23 +153,23 @@ public class Deck {
       throw new IllegalArgumentException("The card with id " + cardId + " is not the current played card");
     }
 
-    CardId solvedCardId = new CardId(cardId);
-    if (!unplayedCards.contains(solvedCardId) && !redBox.containsCard(solvedCardId)) {
+    QuestionId solvedQuestionId = new QuestionId(cardId);
+    if (!nonAnsweredCards.contains(solvedQuestionId) && !redBox.containsCard(solvedQuestionId)) {
       throw new IllegalArgumentException("Card with id " + cardId + " not found in unplayed nor red box");
     }
 
-    if (unplayedCards.contains(solvedCardId)) {
-      unplayedCards.remove(solvedCardId);
-      placeCardInBox(solvedCardId, boxName);
+    if (nonAnsweredCards.contains(solvedQuestionId)) {
+      nonAnsweredCards.remove(solvedQuestionId);
+      placeCardInBox(solvedQuestionId, boxName);
     } else {
-      redBox.removeCard(solvedCardId);
-      placeCardInBox(solvedCardId, boxName);
+      redBox.removeCard(solvedQuestionId);
+      placeCardInBox(solvedQuestionId, boxName);
     }
   }
 
-  private void placeCardInBox(CardId cardId, String boxName) {
+  private void placeCardInBox(QuestionId questionId, String boxName) {
     Box box = getBoxByName(boxName);
-    box.placeCard(cardId);
+    box.placeCard(questionId);
   }
 
   private Box getBoxByName(String boxName) {

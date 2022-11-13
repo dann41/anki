@@ -13,9 +13,9 @@ public class Starter {
     this.appContext = appContext;
   }
 
-  public void start(String deckId) {
+  public void start(String deckId, String collectionId) {
     // TODO move presenter and view to AppContext
-    Presenter presenter = new InteractivePresenter(deckId, appContext);
+    Presenter presenter = new InteractivePresenter(deckId, collectionId, appContext);
     View view = new ConsoleView(presenter);
     view.show();
   }

@@ -1,10 +1,10 @@
 package com.dann41.anki.core.infrastructure.repository.deck;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.dann41.anki.core.domain.deck.Deck;
 import com.dann41.anki.core.domain.deck.DeckId;
 import com.dann41.anki.core.domain.deck.DeckRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -42,15 +42,13 @@ public class FileDeckRepository implements DeckRepository {
 
   @Override
   public void save(Deck deck) {
-    DeckDTO dto = toDTO(deck);
-    deckMap.put(deck.id().value(), dto);
-
+    deckMap.put(deck.id().value(),  DeckDTO.fromDeck(deck));
     saveIntoDisk();
   }
 
   private Map<String, DeckDTO> loadFromDisk() {
     try (FileReader fileOutputStream = new FileReader(fileName)) {
-      return objectMapper.readValue(fileOutputStream, new TypeReference<Map<String, DeckDTO>>() {});
+      return objectMapper.readValue(fileOutputStream, new TypeReference<>() {});
     } catch (IOException e) {
       return new HashMap<>();
     }
@@ -69,24 +67,6 @@ public class FileDeckRepository implements DeckRepository {
       return null;
     }
 
-    return Deck.restore(
-        storedDeck.id(),
-        storedDeck.unplayedCards(),
-        storedDeck.cardsInRedBox(),
-        storedDeck.cardsInOrangeBox(),
-        storedDeck.cardsInGreenBox(),
-        storedDeck.session()
-    );
-  }
-
-  private static DeckDTO toDTO(Deck deck) {
-    return new DeckDTO(
-        deck.id().value(),
-        deck.unplayedCards(),
-        deck.cardsInRedBox(),
-        deck.cardsInOrangeBox(),
-        deck.cardsInGreenBox(),
-        deck.session()
-    );
+    return storedDeck.toDeck();
   }
 }

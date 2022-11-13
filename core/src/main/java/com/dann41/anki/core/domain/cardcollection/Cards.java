@@ -23,7 +23,7 @@ public class Cards {
   }
 
   private static boolean empty(Collection<CardDTO> value) {
-    return value.stream().anyMatch(Objects::nonNull);
+    return value.stream().allMatch(Objects::isNull);
   }
 
   public List<CardDTO> value() {

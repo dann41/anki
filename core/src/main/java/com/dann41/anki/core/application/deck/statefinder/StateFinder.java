@@ -19,7 +19,7 @@ public class StateFinder {
       throw new DeckNotFoundException(id);
     }
     return new StateResponse(
-        deck.unplayedCards().size(),
+        deck.unansweredCards().size(),
         deck.cardsInGreenBox().size(),
         deck.cardsInOrangeBox().size(),
         deck.cardsInRedBox().size(),

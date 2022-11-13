@@ -124,7 +124,7 @@ public class SessionStarterTest {
     ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
     verify(deckRepository, times(1)).save(captor.capture());
     Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unplayedCards()).containsExactly("A");
+    assertThat(savedDeck.unansweredCards()).containsExactly("A");
     assertThat(savedDeck.cardsInRedBox()).containsExactly("B");
     assertThat(savedDeck.cardsInOrangeBox()).containsExactly("C");
     assertThat(savedDeck.cardsInGreenBox()).containsExactly("D");
@@ -134,7 +134,7 @@ public class SessionStarterTest {
     ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
     verify(deckRepository, times(1)).save(captor.capture());
     Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unplayedCards()).containsExactly("A");
+    assertThat(savedDeck.unansweredCards()).containsExactly("A");
     assertThat(savedDeck.cardsInRedBox()).containsExactly("B", "C");
     assertThat(savedDeck.cardsInOrangeBox()).containsExactly("D");
     assertThat(savedDeck.cardsInGreenBox()).isEmpty();
@@ -144,7 +144,7 @@ public class SessionStarterTest {
     ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
     verify(deckRepository, times(1)).save(captor.capture());
     Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unplayedCards()).containsExactly("A");
+    assertThat(savedDeck.unansweredCards()).containsExactly("A");
     assertThat(savedDeck.cardsInRedBox()).containsExactly("B", "C", "D");
     assertThat(savedDeck.cardsInOrangeBox()).isEmpty();
     assertThat(savedDeck.cardsInGreenBox()).isEmpty();

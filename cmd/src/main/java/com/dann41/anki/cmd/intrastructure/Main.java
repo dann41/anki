@@ -14,6 +14,7 @@ public class Main {
     var context = SpringApplication.run(Main.class, args);
 
     String deckId = "arts";
-    context.getBean(Starter.class).start(deckId);
+    String collectionId = "arts";
+    context.getBean(Starter.class).start(deckId, collectionId);
   }
 }
