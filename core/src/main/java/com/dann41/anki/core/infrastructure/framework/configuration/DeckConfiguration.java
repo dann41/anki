@@ -6,6 +6,7 @@ import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
 import com.dann41.anki.core.application.deck.sessionstarter.SessionStarter;
 import com.dann41.anki.core.application.deck.statefinder.StateFinder;
 import com.dann41.anki.core.domain.cardcollection.CardCollectionRepository;
+import com.dann41.anki.core.domain.deck.DeckFinder;
 import com.dann41.anki.core.domain.deck.DeckRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,5 +43,9 @@ public class DeckConfiguration {
     return new StateFinder(deckRepository);
   }
 
+  @Bean
+  DeckFinder deckFinder(DeckRepository deckRepository) {
+    return new DeckFinder(deckRepository);
+  }
 
 }

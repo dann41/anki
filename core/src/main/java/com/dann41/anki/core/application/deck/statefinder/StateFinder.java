@@ -1,23 +1,19 @@
 package com.dann41.anki.core.application.deck.statefinder;
 
 import com.dann41.anki.core.domain.deck.Deck;
+import com.dann41.anki.core.domain.deck.DeckFinder;
 import com.dann41.anki.core.domain.deck.DeckId;
-import com.dann41.anki.core.domain.deck.DeckNotFoundException;
 import com.dann41.anki.core.domain.deck.DeckRepository;
 
 public class StateFinder {
-  private final DeckRepository deckRepository;
+  private final DeckFinder deckFinder;
 
   public StateFinder(DeckRepository deckRepository) {
-    this.deckRepository = deckRepository;
+    this.deckFinder = new DeckFinder(deckRepository);
   }
 
   public StateResponse execute(String deckId) {
-    DeckId id = new DeckId(deckId);
-    Deck deck = deckRepository.findById(id);
-    if (deck == null) {
-      throw new DeckNotFoundException(id);
-    }
+    Deck deck = deckFinder.execute(new DeckId(deckId));
     return new StateResponse(
         deck.unansweredCards().size(),
         deck.cardsInGreenBox().size(),
