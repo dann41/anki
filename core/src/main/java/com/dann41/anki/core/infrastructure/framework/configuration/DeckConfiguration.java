@@ -5,7 +5,6 @@ import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
 import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
 import com.dann41.anki.core.application.deck.sessionstarter.SessionStarter;
 import com.dann41.anki.core.application.deck.statefinder.StateFinder;
-import com.dann41.anki.core.domain.card.CardRepository;
 import com.dann41.anki.core.domain.cardcollection.CardCollectionRepository;
 import com.dann41.anki.core.domain.deck.DeckRepository;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +18,8 @@ import java.time.Clock;
 public class DeckConfiguration {
 
   @Bean
-  CardPicker cardPicker(DeckRepository deckRepository, CardRepository cardRepository, Clock clock) {
-    return new CardPicker(deckRepository, cardRepository, clock);
+  CardPicker cardPicker(DeckRepository deckRepository, Clock clock) {
+    return new CardPicker(deckRepository, clock);
   }
 
   @Bean

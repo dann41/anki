@@ -134,28 +134,36 @@ public class Deck {
     }
   }
 
-  public String pickNextCardId(LocalDate today) {
+  public Question pickNextQuestion(LocalDate today) {
     if (!isTodaySession(today)) {
       throw new SessionNotStartedException(id);
     }
 
     if (!nonAnsweredCards.isEmpty()) {
       QuestionId questionId = nonAnsweredCards.get(0);
-      return questionId.value();
+      return questions.findById(questionId);
     }
 
-    return redBox.pickNextCard();
+    return pickNextQuestionFromRedBox();
+  }
+
+  private Question pickNextQuestionFromRedBox() {
+    String id = redBox.pickNextCard();
+    if (id == null) {
+      return null;
+    }
+    return questions.findById(new QuestionId(id));
   }
 
   public void solveCard(LocalDate today, String cardId, String boxName) {
-    String pickedCardId = pickNextCardId(today);
-    if (!cardId.equals(pickedCardId)) {
-      throw new IllegalArgumentException("The card with id " + cardId + " is not the current played card");
+    Question nextQuestion = pickNextQuestion(today);
+    if (!cardId.equals(nextQuestion.id())) {
+      throw new IllegalArgumentException("The card with id " + cardId + " is not the current question");
     }
 
     QuestionId solvedQuestionId = new QuestionId(cardId);
     if (!nonAnsweredCards.contains(solvedQuestionId) && !redBox.containsCard(solvedQuestionId)) {
-      throw new IllegalArgumentException("Card with id " + cardId + " not found in unplayed nor red box");
+      throw new IllegalArgumentException("Card with id " + cardId + " not found in unanswered nor red box");
     }
 
     if (nonAnsweredCards.contains(solvedQuestionId)) {

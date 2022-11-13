@@ -1,12 +1,10 @@
 package com.dann41.anki.core.application.deck.cardpicker;
 
-import com.dann41.anki.core.domain.card.Card;
-import com.dann41.anki.core.domain.card.CardRepository;
 import com.dann41.anki.core.domain.deck.Deck;
 import com.dann41.anki.core.domain.deck.DeckId;
 import com.dann41.anki.core.domain.deck.DeckNotFoundException;
-import com.dann41.anki.core.domain.card.CardNotFoundException;
 import com.dann41.anki.core.domain.deck.DeckRepository;
+import com.dann41.anki.core.domain.deck.Question;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -14,12 +12,10 @@ import java.time.LocalDate;
 public class CardPicker {
 
   private final DeckRepository deckRepository;
-  private final CardRepository cardRepository;
   private final Clock clock;
 
-  public CardPicker(DeckRepository deckRepository, CardRepository cardRepository, Clock clock) {
+  public CardPicker(DeckRepository deckRepository, Clock clock) {
     this.deckRepository = deckRepository;
-    this.cardRepository = cardRepository;
     this.clock = clock;
   }
 
@@ -30,20 +26,15 @@ public class CardPicker {
       throw new DeckNotFoundException(id);
     }
 
-    String cardId = deck.pickNextCardId(LocalDate.now(clock));
-    if (cardId == null) {
+    Question question = deck.pickNextQuestion(LocalDate.now(clock));
+    if (question == null) {
       return null;
     }
 
-    Card card = cardRepository.findCardById(cardId);
-    if (card == null) {
-      throw new CardNotFoundException(cardId);
-    }
-
     return new CardResponse(
-        cardId,
-        card.question(),
-        card.answer()
+        question.id(),
+        question.question(),
+        question.answer()
     );
   }
 }

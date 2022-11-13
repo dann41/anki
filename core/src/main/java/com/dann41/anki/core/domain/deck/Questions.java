@@ -7,4 +7,11 @@ public record Questions(List<Question> value) {
   public List<Question> value() {
     return value;
   }
+
+  public Question findById(QuestionId questionId) {
+    return value.stream()
+        .filter(question -> questionId.value().equals(question.id()))
+        .findFirst()
+        .orElse(null);
+  }
 }
