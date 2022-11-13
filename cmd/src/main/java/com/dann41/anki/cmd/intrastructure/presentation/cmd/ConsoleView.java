@@ -3,7 +3,7 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 import com.dann41.anki.cmd.intrastructure.presentation.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.Presenter;
 import com.dann41.anki.cmd.intrastructure.presentation.View;
-import com.dann41.anki.core.application.cardpicker.CardResponse;
+import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;

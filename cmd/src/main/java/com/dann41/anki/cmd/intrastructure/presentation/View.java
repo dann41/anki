@@ -1,6 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation;
 
-import com.dann41.anki.core.application.cardpicker.CardResponse;
+import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 
 public interface View {
 

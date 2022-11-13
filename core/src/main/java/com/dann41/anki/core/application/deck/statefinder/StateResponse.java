@@ -1,4 +1,4 @@
-package com.dann41.anki.core.application.statefinder;
+package com.dann41.anki.core.application.deck.statefinder;
 
 import java.time.LocalDate;
 

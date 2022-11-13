@@ -1,5 +1,7 @@
 package com.dann41.anki.core.application.statefinder;
 
+import com.dann41.anki.core.application.deck.statefinder.StateFinder;
+import com.dann41.anki.core.application.deck.statefinder.StateResponse;
 import com.dann41.anki.core.domain.DeckMother;
 import com.dann41.anki.core.domain.deck.DeckId;
 import com.dann41.anki.core.domain.deck.DeckRepository;

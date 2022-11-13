@@ -1,15 +1,15 @@
 package com.dann41.anki.cmd.intrastructure.presentation;
 
-import com.dann41.anki.core.application.cardpicker.CardPicker;
-import com.dann41.anki.core.application.cardpicker.CardResponse;
-import com.dann41.anki.core.application.cardsolver.CardSolver;
-import com.dann41.anki.core.application.cardsolver.SolveCardCommand;
-import com.dann41.anki.core.application.deckcreator.CreateDeckCommand;
-import com.dann41.anki.core.application.deckcreator.DeckCreator;
-import com.dann41.anki.core.application.sessionstarter.SessionStarter;
-import com.dann41.anki.core.application.sessionstarter.StartSessionCommand;
-import com.dann41.anki.core.application.statefinder.StateFinder;
-import com.dann41.anki.core.application.statefinder.StateResponse;
+import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
+import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
+import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
+import com.dann41.anki.core.application.deck.cardsolver.SolveCardCommand;
+import com.dann41.anki.core.application.deck.deckcreator.CreateDeckCommand;
+import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
+import com.dann41.anki.core.application.deck.sessionstarter.SessionStarter;
+import com.dann41.anki.core.application.deck.sessionstarter.StartSessionCommand;
+import com.dann41.anki.core.application.deck.statefinder.StateFinder;
+import com.dann41.anki.core.application.deck.statefinder.StateResponse;
 import com.dann41.anki.core.domain.deck.DeckNotFoundException;
 import org.springframework.context.ApplicationContext;
 

@@ -1,10 +1,10 @@
 package com.dann41.anki.core.infrastructure.framework.configuration;
 
-import com.dann41.anki.core.application.cardpicker.CardPicker;
-import com.dann41.anki.core.application.cardsolver.CardSolver;
-import com.dann41.anki.core.application.deckcreator.DeckCreator;
-import com.dann41.anki.core.application.sessionstarter.SessionStarter;
-import com.dann41.anki.core.application.statefinder.StateFinder;
+import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
+import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
+import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
+import com.dann41.anki.core.application.deck.sessionstarter.SessionStarter;
+import com.dann41.anki.core.application.deck.statefinder.StateFinder;
 import com.dann41.anki.core.domain.card.CardRepository;
 import com.dann41.anki.core.domain.deck.DeckRepository;
 import org.springframework.context.annotation.Bean;

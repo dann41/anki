@@ -1,4 +1,4 @@
-package com.dann41.anki.core.application.deckcreator;
+package com.dann41.anki.core.application.deck.deckcreator;
 
 import com.dann41.anki.core.domain.card.Card;
 import com.dann41.anki.core.domain.card.CardRepository;

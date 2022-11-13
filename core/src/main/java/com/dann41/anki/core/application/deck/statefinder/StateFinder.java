@@ -1,4 +1,4 @@
-package com.dann41.anki.core.application.statefinder;
+package com.dann41.anki.core.application.deck.statefinder;
 
 import com.dann41.anki.core.domain.deck.Deck;
 import com.dann41.anki.core.domain.deck.DeckId;
