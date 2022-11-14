@@ -1,5 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import com.dann41.anki.core.application.deck.alldecksfinder.AllDecksFinder;
 import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
@@ -142,7 +143,8 @@ public class InteractivePresenter implements Presenter {
 
   @Override
   public void loadDecks() {
-    view.displayDecks(Arrays.asList("arts", "2", "3"));
+    AllDecksFinder allDecksFinder = appContext.getBean(AllDecksFinder.class);
+    view.displayDecks(allDecksFinder.execute().decks());
   }
 
   @Override

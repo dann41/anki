@@ -1,5 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import com.dann41.anki.core.application.deck.alldecksfinder.DeckSummary;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 
 import java.time.format.DateTimeFormatter;
@@ -51,9 +52,11 @@ public class ConsoleView implements View {
   }
 
   @Override
-  public void displayDecks(List<String> decks) {
-    for (String deck : decks) {
-      System.out.println(deck);
+  public void displayDecks(List<DeckSummary> decks) {
+    for (DeckSummary deck : decks) {
+      System.out.println(
+          deck.id() + " - " + deck.numberOfQuestions() + " questions. Last played on " + deck.lastSession().toString()
+      );
     }
 
     System.out.print("Choose the deck to play: ");

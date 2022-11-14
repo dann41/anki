@@ -1,5 +1,6 @@
 package com.dann41.anki.core.infrastructure.framework.configuration;
 
+import com.dann41.anki.core.application.deck.alldecksfinder.AllDecksFinder;
 import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
 import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
 import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
@@ -46,6 +47,11 @@ public class DeckConfiguration {
   @Bean
   DeckFinder deckFinder(DeckRepository deckRepository) {
     return new DeckFinder(deckRepository);
+  }
+
+  @Bean
+  AllDecksFinder allDecksFinder(DeckRepository deckRepository) {
+    return new AllDecksFinder(deckRepository);
   }
 
 }
