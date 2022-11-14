@@ -1,4 +1,4 @@
-package com.dann41.anki.cmd.intrastructure.presentation;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
 import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
@@ -13,15 +13,17 @@ import com.dann41.anki.core.application.deck.statefinder.StateResponse;
 import com.dann41.anki.core.domain.deck.DeckNotFoundException;
 import org.springframework.context.ApplicationContext;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class InteractivePresenter implements Presenter {
   private final ApplicationContext appContext;
   private View view;
-  private final String deckId;
-  private final String collectionId;
+  private String deckId;
+  private String collectionId;
   private static final Map<String, String> BOX_MAPPER = new HashMap<>();
 
   static {
@@ -30,10 +32,8 @@ public class InteractivePresenter implements Presenter {
     BOX_MAPPER.put("r", "red");
   }
 
-  public InteractivePresenter(String deckId, String collectionId, ApplicationContext appContext) {
+  public InteractivePresenter(ApplicationContext appContext) {
     // TODO inject use cases instead of AppContext
-    this.deckId = deckId;
-    this.collectionId = collectionId;
     this.appContext = appContext;
   }
 
@@ -45,9 +45,22 @@ public class InteractivePresenter implements Presenter {
 
   public void onStart() {
     view.displayWelcome();
+    view.displayMainMenu();
+  }
+
+  @Override
+  public void playDeck(String deckId) {
+    this.deckId = deckId;
     startSession();
     displayState();
     displayNextCard();
+  }
+
+  @Override
+  public void createDeck(String collectionId) {
+    this.deckId = UUID.randomUUID().toString();
+    this.collectionId = collectionId;
+    startSession();
   }
 
   private void startSession() {
@@ -55,6 +68,12 @@ public class InteractivePresenter implements Presenter {
     try {
       sessionStarter.execute(new StartSessionCommand(deckId));
     } catch (DeckNotFoundException e) {
+      if (collectionId == null) {
+        view.displayError("Cannot find deckId for id " + e.deckId().toString());
+        view.displayMainMenu();
+        return;
+      }
+
       DeckCreator deckCreator = appContext.getBean(DeckCreator.class);
       deckCreator.execute(new CreateDeckCommand(deckId, collectionId));
       sessionStarter.execute(new StartSessionCommand(deckId));
@@ -119,5 +138,15 @@ public class InteractivePresenter implements Presenter {
     cardSolver.execute(new SolveCardCommand(deckId, cardId, boxName));
 
     displayNextCard();
+  }
+
+  @Override
+  public void loadDecks() {
+    view.displayDecks(Arrays.asList("arts", "2", "3"));
+  }
+
+  @Override
+  public void loadCollections() {
+    view.displayCollections(Arrays.asList("arts", "asdasd"));
   }
 }

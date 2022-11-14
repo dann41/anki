@@ -1,24 +1,19 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
-import com.dann41.anki.cmd.intrastructure.presentation.AnkiState;
-import com.dann41.anki.cmd.intrastructure.presentation.Presenter;
-import com.dann41.anki.cmd.intrastructure.presentation.View;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 public class ConsoleView implements View {
 
   private final Presenter presenter;
-  private final BufferedReader reader;
+  private final CmdTools cmdTools;
 
   public ConsoleView(Presenter presenter) {
     this.presenter = presenter;
-    this.reader = new BufferedReader(new InputStreamReader(System.in));
+    this.cmdTools = new CmdTools();
   }
 
   @Override
@@ -26,11 +21,55 @@ public class ConsoleView implements View {
     presenter.onViewShown(this);
   }
 
+  public void hide() {
+    cmdTools.close();
+  }
+
   @Override
   public void displayWelcome() {
     System.out.println("Welcome to ANKI 2.0");
     System.out.println("The best tool to study stuff");
     System.out.println();
+  }
+
+  @Override
+  public void displayMainMenu() {
+    System.out.println("What do you want to do?");
+    System.out.println("1. Play an existing deck");
+    System.out.println("2. Create a new deck");
+    System.out.print("Choose an option: ");
+    String option = cmdTools.readLine();
+    if ("1".equals(option)) {
+      presenter.loadDecks();
+    } else if ("2".equals(option)) {
+      presenter.loadCollections();
+    } else {
+      System.out.println("Invalid option.");
+      displayMainMenu();
+    }
+
+  }
+
+  @Override
+  public void displayDecks(List<String> decks) {
+    for (String deck : decks) {
+      System.out.println(deck);
+    }
+
+    System.out.print("Choose the deck to play: ");
+    String deckId = cmdTools.readLine();
+    presenter.playDeck(deckId);
+  }
+
+  @Override
+  public void displayCollections(List<String> collections) {
+    for (String colleciton : collections) {
+      System.out.println(colleciton);
+    }
+
+    System.out.print("Choose a collection to create a deck from: ");
+    String collectionId = cmdTools.readLine();
+    presenter.createDeck(collectionId);
   }
 
   @Override
@@ -60,18 +99,10 @@ public class ConsoleView implements View {
     requestBoxCategorization(cardResponse.id());
   }
 
-  private String readLine() {
-    try {
-      return reader.readLine();
-    } catch (IOException e) {
-      return null;
-    }
-  }
-
   @Override
   public void requestBoxCategorization(String cardId) {
     System.out.println("Where do you want to put the card? (G) Green box, (O) Orange box, (R) Red box: ");
-    String input = readLine();
+    String input = cmdTools.readLine();
     presenter.solveCard(cardId, input);
   }
 

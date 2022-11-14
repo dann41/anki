@@ -1,4 +1,4 @@
-package com.dann41.anki.cmd.intrastructure.presentation;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
 import java.time.LocalDate;
 
