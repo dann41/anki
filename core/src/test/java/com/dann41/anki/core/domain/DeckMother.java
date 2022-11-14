@@ -36,6 +36,18 @@ public class DeckMother {
     );
   }
 
+  public static Deck withoutPendingForToday() {
+    return Deck.restore(
+        DECK_ID,
+        questions(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        Arrays.asList("A", "B", "C", "D", "E", "F"),
+        Arrays.asList("G", "H", "I", "J"),
+        LocalDate.of(2022, 11, 10)
+    );
+  }
+
   public static Deck withSession(LocalDate session) {
     return Deck.restore(
         DECK_ID,

@@ -11,12 +11,10 @@ import java.time.LocalDate;
 
 public class CardPicker {
 
-  private final DeckRepository deckRepository;
   private final DeckFinder deckFinder;
   private final Clock clock;
 
   public CardPicker(DeckRepository deckRepository, Clock clock) {
-    this.deckRepository = deckRepository;
     this.deckFinder = new DeckFinder(deckRepository);
     this.clock = clock;
   }
