@@ -1,11 +1,10 @@
 package com.dann41.anki.core.application.deck.deckcreator;
 
-import com.dann41.anki.core.domain.card.CardDTO;
 import com.dann41.anki.core.domain.cardcollection.CardCollection;
 import com.dann41.anki.core.domain.cardcollection.CardCollectionId;
 import com.dann41.anki.core.domain.cardcollection.CardCollectionRepository;
-import com.dann41.anki.core.domain.deck.DeckAlreadyExistsException;
 import com.dann41.anki.core.domain.deck.Deck;
+import com.dann41.anki.core.domain.deck.DeckAlreadyExistsException;
 import com.dann41.anki.core.domain.deck.DeckId;
 import com.dann41.anki.core.domain.deck.DeckRepository;
 import com.dann41.anki.core.domain.deck.Question;

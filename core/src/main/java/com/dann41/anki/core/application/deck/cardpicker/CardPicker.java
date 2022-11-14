@@ -3,7 +3,6 @@ package com.dann41.anki.core.application.deck.cardpicker;
 import com.dann41.anki.core.domain.deck.Deck;
 import com.dann41.anki.core.domain.deck.DeckFinder;
 import com.dann41.anki.core.domain.deck.DeckId;
-import com.dann41.anki.core.domain.deck.DeckNotFoundException;
 import com.dann41.anki.core.domain.deck.DeckRepository;
 import com.dann41.anki.core.domain.deck.Question;
 
