@@ -1,10 +1,12 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import com.dann41.anki.core.application.collection.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.application.deck.alldecksfinder.AllDecksFinder;
 import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
 import com.dann41.anki.core.application.deck.cardsolver.SolveCardCommand;
+import com.dann41.anki.core.application.deck.deckcreator.CollectionNotFoundException;
 import com.dann41.anki.core.application.deck.deckcreator.CreateDeckCommand;
 import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
 import com.dann41.anki.core.application.deck.sessionstarter.SessionStarter;
@@ -65,7 +67,7 @@ public class InteractivePresenter implements Presenter {
   }
 
   private void startSession() {
-    SessionStarter sessionStarter = appContext.getBean(SessionStarter.class);
+    var sessionStarter = appContext.getBean(SessionStarter.class);
     try {
       sessionStarter.execute(new StartSessionCommand(deckId));
     } catch (DeckNotFoundException e) {
@@ -75,9 +77,14 @@ public class InteractivePresenter implements Presenter {
         return;
       }
 
-      DeckCreator deckCreator = appContext.getBean(DeckCreator.class);
-      deckCreator.execute(new CreateDeckCommand(deckId, collectionId));
-      sessionStarter.execute(new StartSessionCommand(deckId));
+      var deckCreator = appContext.getBean(DeckCreator.class);
+      try {
+        deckCreator.execute(new CreateDeckCommand(deckId, collectionId));
+        sessionStarter.execute(new StartSessionCommand(deckId));
+      } catch (CollectionNotFoundException exception) {
+        view.displayError("Cannot find collectionId for id " + e.deckId().toString());
+        view.displayMainMenu();
+      }
     }
   }
 
@@ -149,6 +156,7 @@ public class InteractivePresenter implements Presenter {
 
   @Override
   public void loadCollections() {
-    view.displayCollections(Arrays.asList("arts", "asdasd"));
+    var allCollectionsFinder = appContext.getBean(AllCollectionsFinder.class);
+    view.displayCollections(allCollectionsFinder.execute().collections());
   }
 }

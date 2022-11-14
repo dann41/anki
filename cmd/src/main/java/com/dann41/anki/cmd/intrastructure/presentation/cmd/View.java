@@ -1,5 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import com.dann41.anki.core.application.collection.allcollectionsfinder.CardCollectionSummary;
 import com.dann41.anki.core.application.deck.alldecksfinder.DeckSummary;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 
@@ -15,7 +16,7 @@ public interface View {
 
   void displayDecks(List<DeckSummary> decks);
 
-  void displayCollections(List<String> collection);
+  void displayCollections(List<CardCollectionSummary> collection);
 
   void displayState(AnkiState ankiState);
 

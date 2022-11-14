@@ -1,5 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import com.dann41.anki.core.application.collection.allcollectionsfinder.CardCollectionSummary;
 import com.dann41.anki.core.application.deck.alldecksfinder.DeckSummary;
 import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
 
@@ -65,9 +66,12 @@ public class ConsoleView implements View {
   }
 
   @Override
-  public void displayCollections(List<String> collections) {
-    for (String colleciton : collections) {
-      System.out.println(colleciton);
+  public void displayCollections(List<CardCollectionSummary> collections) {
+    for (CardCollectionSummary collection : collections) {
+      System.out.println(collection.id() + " - " + collection.name());
+      System.out.println(collection.description());
+      System.out.println("Number of questions: " + collection.numberOfQuestions());
+      System.out.println();
     }
 
     System.out.print("Choose a collection to create a deck from: ");

@@ -6,6 +6,7 @@ import com.dann41.anki.core.domain.cardcollection.CardCollectionId;
 import com.dann41.anki.core.domain.cardcollection.CardCollectionRepository;
 import com.dann41.anki.core.infrastructure.repository.card.FileCardImporter;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -16,13 +17,13 @@ public class FileCardCollectionRepository implements CardCollectionRepository {
 
   public FileCardCollectionRepository(FileCardImporter fileCardImporter) {
     var cards = fileCardImporter.load();
-    var collection = new CardCollectionDTO(
+    var collection = new CardCollection(
         "arts",
         "arts",
         "",
         cards.stream().map(card -> new CardDTO(card.question(), card.answer())).collect(Collectors.toList())
     );
-    cardCollections.put(collection.id(), collection);
+    cardCollections.put(collection.id(), CardCollectionDTO.fromDomain(collection));
   }
 
   @Override
@@ -32,10 +33,11 @@ public class FileCardCollectionRepository implements CardCollectionRepository {
       return null;
     }
 
-    return new CardCollection(
-        collectionDTO.id(),
-        collectionDTO.name(),
-        collectionDTO.description(),
-        collectionDTO.cards().stream().toList());
+    return collectionDTO.toDomain();
+  }
+
+  @Override
+  public Collection<CardCollection> findAll() {
+    return cardCollections.values().stream().map(CardCollectionDTO::toDomain).collect(Collectors.toList());
   }
 }
