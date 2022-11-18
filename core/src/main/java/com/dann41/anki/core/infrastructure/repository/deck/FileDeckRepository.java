@@ -42,7 +42,17 @@ public class FileDeckRepository implements DeckRepository {
 
   @Override
   public void save(Deck deck) {
-    deckMap.put(deck.id().value(),  DeckDTO.fromDeck(deck));
+    if (deck.isDeleted()) {
+     delete(deck.id());
+     return;
+    }
+
+    deckMap.put(deck.id().value(), DeckDTO.fromDeck(deck));
+    saveIntoDisk();
+  }
+
+  private void delete(DeckId id) {
+    deckMap.remove(id.value());
     saveIntoDisk();
   }
 

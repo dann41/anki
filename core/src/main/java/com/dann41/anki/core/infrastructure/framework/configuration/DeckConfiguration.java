@@ -4,6 +4,7 @@ import com.dann41.anki.core.application.deck.alldecksfinder.AllDecksFinder;
 import com.dann41.anki.core.application.deck.cardpicker.CardPicker;
 import com.dann41.anki.core.application.deck.cardsolver.CardSolver;
 import com.dann41.anki.core.application.deck.deckcreator.DeckCreator;
+import com.dann41.anki.core.application.deck.deckremover.DeckDeleter;
 import com.dann41.anki.core.application.deck.sessionstarter.SessionStarter;
 import com.dann41.anki.core.application.deck.statefinder.StateFinder;
 import com.dann41.anki.core.domain.cardcollection.CardCollectionRepository;
@@ -52,6 +53,11 @@ public class DeckConfiguration {
   @Bean
   AllDecksFinder allDecksFinder(DeckRepository deckRepository) {
     return new AllDecksFinder(deckRepository);
+  }
+
+  @Bean
+  DeckDeleter deckDeleter(DeckRepository deckRepository) {
+    return new DeckDeleter(deckRepository);
   }
 
 }

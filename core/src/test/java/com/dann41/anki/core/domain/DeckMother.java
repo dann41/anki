@@ -20,7 +20,8 @@ public class DeckMother {
         Arrays.asList("B", "C"),
         Arrays.asList("D", "E", "F"),
         Arrays.asList("G", "H", "I", "J"),
-        LocalDate.of(2022, 11, 10)
+        LocalDate.of(2022, 11, 10),
+        false
     );
   }
 
@@ -32,7 +33,8 @@ public class DeckMother {
         Arrays.asList("A", "B", "C"),
         Arrays.asList("D", "E", "F"),
         Arrays.asList("G", "H", "I", "J"),
-        LocalDate.of(2022, 11, 10)
+        LocalDate.of(2022, 11, 10),
+        false
     );
   }
 
@@ -44,7 +46,8 @@ public class DeckMother {
         Collections.emptyList(),
         Arrays.asList("A", "B", "C", "D", "E", "F"),
         Arrays.asList("G", "H", "I", "J"),
-        LocalDate.of(2022, 11, 10)
+        LocalDate.of(2022, 11, 10),
+        false
     );
   }
 
@@ -56,7 +59,8 @@ public class DeckMother {
         Collections.singletonList("B"),
         Collections.singletonList("C"),
         Collections.singletonList("D"),
-        session
+        session,
+        false
     );
   }
 

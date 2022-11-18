@@ -14,7 +14,8 @@ public record DeckDTO(
     @JsonProperty("cardsInRedBox") List<String> cardsInRedBox,
     @JsonProperty("cardsInOrangeBox") List<String> cardsInOrangeBox,
     @JsonProperty("cardsInGreenBox") List<String> cardsInGreenBox,
-    @JsonProperty("session") LocalDate session
+    @JsonProperty("session") LocalDate session,
+    @JsonProperty("isDeleted") boolean isDeleted
 ) {
 
   public Deck toDeck() {
@@ -25,7 +26,8 @@ public record DeckDTO(
         cardsInRedBox(),
         cardsInOrangeBox(),
         cardsInGreenBox(),
-        session()
+        session(),
+        isDeleted()
     );
   }
 
@@ -37,7 +39,8 @@ public record DeckDTO(
         deck.cardsInRedBox(),
         deck.cardsInOrangeBox(),
         deck.cardsInGreenBox(),
-        deck.session()
+        deck.session(),
+        deck.isDeleted()
     );
   }
 }

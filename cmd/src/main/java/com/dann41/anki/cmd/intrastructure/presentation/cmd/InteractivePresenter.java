@@ -16,7 +16,6 @@ import com.dann41.anki.core.application.deck.statefinder.StateResponse;
 import com.dann41.anki.core.domain.deck.DeckNotFoundException;
 import org.springframework.context.ApplicationContext;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

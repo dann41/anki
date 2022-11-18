@@ -19,7 +19,9 @@ public class Deck {
   private final Box greenBox;
   private Session session;
 
-  public Deck(DeckId id, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session) {
+  private boolean isDeleted;
+
+  public Deck(DeckId id, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session, boolean isDeleted) {
     this.id = id;
     this.questions = new Questions(question);
     this.nonAnsweredCards = nonAnsweredCards;
@@ -27,6 +29,7 @@ public class Deck {
     this.orangeBox = orangeBox;
     this.greenBox = greenBox;
     this.session = session;
+    this.isDeleted = isDeleted;
   }
 
   public static Deck create(String deckId, List<Question> cards) {
@@ -37,7 +40,8 @@ public class Deck {
         Box.create(Collections.emptyList()),
         Box.create(Collections.emptyList()),
         Box.create(Collections.emptyList()),
-        null
+        null,
+        false
     );
   }
 
@@ -48,7 +52,8 @@ public class Deck {
       List<String> cardsInRedBox,
       List<String> cardsInOrangeBox,
       List<String> cardsInGreenBox,
-      LocalDate lastSession
+      LocalDate lastSession,
+      Boolean isDeleted
   ) {
     return new Deck(
         new DeckId(deckId),
@@ -57,7 +62,8 @@ public class Deck {
         Box.create(cardsInRedBox),
         Box.create(cardsInOrangeBox),
         Box.create(cardsInGreenBox),
-        Session.fromDate(lastSession)
+        Session.fromDate(lastSession),
+        isDeleted
     );
   }
 
@@ -99,7 +105,13 @@ public class Deck {
     return Optional.ofNullable(session).map(Session::value).orElse(null);
   }
 
+  public boolean isDeleted() {
+    return isDeleted;
+  }
+
   public void startNewSession(LocalDate today) {
+    ensureNotDeleted();
+
     if (isFirstSession()) {
       session = Session.fromDate(today);
       // first session started
@@ -114,6 +126,51 @@ public class Deck {
     // new session
     rotateBoxes(session.daysSinceLastSession(today));
     session = Session.fromDate(today);
+  }
+
+  public Question pickNextQuestion(LocalDate today) {
+    ensureNotDeleted();
+
+    if (!isTodaySession(today)) {
+      throw new SessionNotStartedException(id);
+    }
+
+    if (!nonAnsweredCards.isEmpty()) {
+      QuestionId questionId = nonAnsweredCards.get(0);
+      return questions.findById(questionId);
+    }
+
+    return pickNextQuestionFromRedBox();
+  }
+
+  public void solveCard(LocalDate today, String cardId, String boxName) {
+    ensureNotDeleted();
+
+    Question nextQuestion = pickNextQuestion(today);
+    if (!cardId.equals(nextQuestion.id())) {
+      throw new IllegalArgumentException("The card with id " + cardId + " is not the current question");
+    }
+
+    QuestionId solvedQuestionId = new QuestionId(cardId);
+    if (!nonAnsweredCards.contains(solvedQuestionId) && !redBox.containsCard(solvedQuestionId)) {
+      throw new IllegalArgumentException("Card with id " + cardId + " not found in unanswered nor red box");
+    }
+
+    if (nonAnsweredCards.contains(solvedQuestionId)) {
+      nonAnsweredCards.remove(solvedQuestionId);
+      placeCardInBox(solvedQuestionId, boxName);
+    } else {
+      redBox.removeCard(solvedQuestionId);
+      placeCardInBox(solvedQuestionId, boxName);
+    }
+  }
+
+  public void delete() {
+    if (isDeleted) {
+      throw new IllegalArgumentException("Deck "+ id + " already deleted");
+    }
+
+    isDeleted = true;
   }
 
   private boolean isTodaySession(LocalDate today) {
@@ -134,45 +191,12 @@ public class Deck {
     }
   }
 
-  public Question pickNextQuestion(LocalDate today) {
-    if (!isTodaySession(today)) {
-      throw new SessionNotStartedException(id);
-    }
-
-    if (!nonAnsweredCards.isEmpty()) {
-      QuestionId questionId = nonAnsweredCards.get(0);
-      return questions.findById(questionId);
-    }
-
-    return pickNextQuestionFromRedBox();
-  }
-
   private Question pickNextQuestionFromRedBox() {
     String id = redBox.pickNextCard();
     if (id == null) {
       return null;
     }
     return questions.findById(new QuestionId(id));
-  }
-
-  public void solveCard(LocalDate today, String cardId, String boxName) {
-    Question nextQuestion = pickNextQuestion(today);
-    if (!cardId.equals(nextQuestion.id())) {
-      throw new IllegalArgumentException("The card with id " + cardId + " is not the current question");
-    }
-
-    QuestionId solvedQuestionId = new QuestionId(cardId);
-    if (!nonAnsweredCards.contains(solvedQuestionId) && !redBox.containsCard(solvedQuestionId)) {
-      throw new IllegalArgumentException("Card with id " + cardId + " not found in unanswered nor red box");
-    }
-
-    if (nonAnsweredCards.contains(solvedQuestionId)) {
-      nonAnsweredCards.remove(solvedQuestionId);
-      placeCardInBox(solvedQuestionId, boxName);
-    } else {
-      redBox.removeCard(solvedQuestionId);
-      placeCardInBox(solvedQuestionId, boxName);
-    }
   }
 
   private void placeCardInBox(QuestionId questionId, String boxName) {
@@ -193,6 +217,12 @@ public class Deck {
       return redBox;
     }
 
-    throw new IllegalArgumentException("Unknown box " + boxName);
+    throw new IllegalArgumentException("Unknown box " + boxName + " on deck " + id);
+  }
+
+  private void ensureNotDeleted() {
+    if (isDeleted) {
+      throw new IllegalArgumentException("Cannot run operation on deleted deck " + id);
+    }
   }
 }
