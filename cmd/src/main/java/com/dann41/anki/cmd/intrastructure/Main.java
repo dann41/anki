@@ -1,7 +1,7 @@
 package com.dann41.anki.cmd.intrastructure;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.Starter;
-import com.dann41.anki.core.infrastructure.framework.configuration.CoreModule;
+import com.dann41.anki.core.shared.infrastructure.framework.CoreModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

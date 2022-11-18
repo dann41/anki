@@ -1,8 +1,8 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
-import com.dann41.anki.core.application.collection.allcollectionsfinder.CardCollectionSummary;
-import com.dann41.anki.core.application.deck.alldecksfinder.DeckSummary;
-import com.dann41.anki.core.application.deck.cardpicker.CardResponse;
+import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.CardCollectionSummary;
+import com.dann41.anki.core.deck.application.alldecksfinder.DeckSummary;
+import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
 
 import java.util.List;
 
