@@ -1,8 +1,10 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
-import com.dann41.anki.core.deck.application.alldecksfinder.AllDecksFinder;
+import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
+import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinderQuery;
 import com.dann41.anki.core.deck.application.cardpicker.CardPicker;
+import com.dann41.anki.core.deck.application.cardpicker.CardPickerQuery;
 import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
 import com.dann41.anki.core.deck.application.cardsolver.CardSolver;
 import com.dann41.anki.core.deck.application.cardsolver.SolveCardCommand;
@@ -12,6 +14,7 @@ import com.dann41.anki.core.deck.application.deckcreator.DeckCreator;
 import com.dann41.anki.core.deck.application.sessionstarter.SessionStarter;
 import com.dann41.anki.core.deck.application.sessionstarter.StartSessionCommand;
 import com.dann41.anki.core.deck.application.statefinder.StateFinder;
+import com.dann41.anki.core.deck.application.statefinder.StateFinderQuery;
 import com.dann41.anki.core.deck.application.statefinder.StateResponse;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
 import org.springframework.context.ApplicationContext;
@@ -25,6 +28,7 @@ public class InteractivePresenter implements Presenter {
   private final ApplicationContext appContext;
   private View view;
   private String deckId;
+  private String userId;
   private String collectionId;
   private static final Map<String, String> BOX_MAPPER = new HashMap<>();
 
@@ -37,6 +41,7 @@ public class InteractivePresenter implements Presenter {
   public InteractivePresenter(ApplicationContext appContext) {
     // TODO inject use cases instead of AppContext
     this.appContext = appContext;
+    this.userId = "1234";
   }
 
   @Override
@@ -68,7 +73,7 @@ public class InteractivePresenter implements Presenter {
   private void startSession() {
     var sessionStarter = appContext.getBean(SessionStarter.class);
     try {
-      sessionStarter.execute(new StartSessionCommand(deckId));
+      sessionStarter.execute(new StartSessionCommand(deckId, userId));
     } catch (DeckNotFoundException e) {
       if (collectionId == null) {
         view.displayError("Cannot find deckId for id " + e.deckId().toString());
@@ -78,8 +83,8 @@ public class InteractivePresenter implements Presenter {
 
       var deckCreator = appContext.getBean(DeckCreator.class);
       try {
-        deckCreator.execute(new CreateDeckCommand(deckId, collectionId));
-        sessionStarter.execute(new StartSessionCommand(deckId));
+        deckCreator.execute(new CreateDeckCommand(deckId, userId, collectionId));
+        sessionStarter.execute(new StartSessionCommand(deckId, userId));
       } catch (CollectionNotFoundException exception) {
         view.displayError("Cannot find collectionId for id " + e.deckId().toString());
         view.displayMainMenu();
@@ -89,7 +94,7 @@ public class InteractivePresenter implements Presenter {
 
   private AnkiState retrieveState() {
     StateFinder stateFinder = appContext.getBean(StateFinder.class);
-    StateResponse stateResponse = stateFinder.execute(deckId);
+    StateResponse stateResponse = stateFinder.execute(new StateFinderQuery(deckId, userId));
     return toAnkiState(stateResponse);
   }
 
@@ -119,7 +124,7 @@ public class InteractivePresenter implements Presenter {
 
   private CardResponse getNextCard() {
     CardPicker cardPicker = appContext.getBean(CardPicker.class);
-    return cardPicker.execute(deckId);
+    return cardPicker.execute(new CardPickerQuery(deckId, userId));
   }
 
   private static AnkiState toAnkiState(StateResponse stateResponse) {
@@ -142,15 +147,15 @@ public class InteractivePresenter implements Presenter {
     }
 
     CardSolver cardSolver = appContext.getBean(CardSolver.class);
-    cardSolver.execute(new SolveCardCommand(deckId, cardId, boxName));
+    cardSolver.execute(new SolveCardCommand(deckId, userId, cardId, boxName));
 
     displayNextCard();
   }
 
   @Override
   public void loadDecks() {
-    AllDecksFinder allDecksFinder = appContext.getBean(AllDecksFinder.class);
-    view.displayDecks(allDecksFinder.execute().decks());
+    MyDecksFinder myDecksFinder = appContext.getBean(MyDecksFinder.class);
+    view.displayDecks(myDecksFinder.execute(new MyDecksFinderQuery(userId)).decks());
   }
 
   @Override

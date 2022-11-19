@@ -1,10 +1,15 @@
 package com.dann41.anki.core.deck.domain;
 
+import com.dann41.anki.core.user.domain.UserId;
+
 import java.util.List;
+import java.util.Optional;
 
 public interface DeckRepository {
 
   Deck findById(DeckId deckId);
+
+  List<Deck> findByUserId(UserId userId);
 
   List<Deck> findAll();
 

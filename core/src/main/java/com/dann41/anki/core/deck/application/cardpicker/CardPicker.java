@@ -5,6 +5,7 @@ import com.dann41.anki.core.deck.domain.DeckFinder;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckRepository;
 import com.dann41.anki.core.deck.domain.Question;
+import com.dann41.anki.core.user.domain.UserId;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -19,8 +20,8 @@ public class CardPicker {
     this.clock = clock;
   }
 
-  public CardResponse execute(String deckId) {
-    Deck deck = deckFinder.execute(new DeckId(deckId));
+  public CardResponse execute(CardPickerQuery query) {
+      Deck deck = deckFinder.execute(new DeckId(query.deckId()), new UserId(query.userId()));
     Question question = deck.pickNextQuestion(LocalDate.now(clock));
     if (question == null) {
       return null;

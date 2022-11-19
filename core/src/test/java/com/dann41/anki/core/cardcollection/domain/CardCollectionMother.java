@@ -1,7 +1,6 @@
 package com.dann41.anki.core.cardcollection.domain;
 
 import com.dann41.anki.core.cardcollection.domain.card.CardDTO;
-import com.dann41.anki.core.cardcollection.domain.CardCollection;
 
 import java.util.List;
 

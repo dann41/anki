@@ -1,8 +1,8 @@
 package com.dann41.anki.core.deck.application.cardpicker;
 
-import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
+import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
 import com.dann41.anki.core.deck.domain.DeckRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 import static com.dann41.anki.core.deck.domain.DeckMother.DECK_ID;
+import static com.dann41.anki.core.deck.domain.DeckMother.USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
@@ -40,14 +41,14 @@ class CardPickerTest {
   public void givenExistingDeckWithUnansweredCardsShouldReturnNextCard() {
     givenDeck(DeckMother.defaultDeck());
 
-    CardResponse response = cardPicker.execute(DECK_ID);
+    CardResponse response = cardPicker.execute(cardPickerQuery());
 
     assertThat(response).isEqualTo(new CardResponse("A", "A", "Answer A"));
   }
 
   @Test
   public void givenNonExistingDeckShouldThrowException() {
-    assertThatThrownBy(() -> cardPicker.execute(DECK_ID))
+    assertThatThrownBy(() -> cardPicker.execute(cardPickerQuery()))
         .isInstanceOf(DeckNotFoundException.class);
   }
 
@@ -55,12 +56,16 @@ class CardPickerTest {
   public void givenExistingDeckWithoutPendingCardsShouldReturnNull() {
     givenDeck(DeckMother.withoutPendingForToday());
 
-    CardResponse response = cardPicker.execute(DECK_ID);
+    CardResponse response = cardPicker.execute(cardPickerQuery());
 
     assertThat(response).isNull();
   }
 
   private void givenDeck(Deck deck) {
     given(deckRepository.findById(new DeckId(DECK_ID))).willReturn(deck);
+  }
+
+  private static CardPickerQuery cardPickerQuery() {
+    return new CardPickerQuery(DECK_ID, USER_ID);
   }
 }

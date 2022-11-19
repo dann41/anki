@@ -1,7 +1,7 @@
 package com.dann41.anki.core.deck.application.statefinder;
 
-import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.DeckId;
+import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.DeckRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static com.dann41.anki.core.deck.domain.DeckMother.DECK_ID;
+import static com.dann41.anki.core.deck.domain.DeckMother.USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -28,7 +29,7 @@ public class StateFinderTest {
   public void shouldReturnState() {
     givenDeck();
 
-    StateResponse response = stateFinder.execute(DECK_ID);
+    StateResponse response = stateFinder.execute(new StateFinderQuery(DECK_ID, USER_ID));
 
     assertThat(response.totalCards()).isEqualTo(10);
     assertThat(response)

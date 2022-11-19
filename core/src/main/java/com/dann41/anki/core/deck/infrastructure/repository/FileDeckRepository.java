@@ -3,6 +3,7 @@ package com.dann41.anki.core.deck.infrastructure.repository;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckRepository;
+import com.dann41.anki.core.user.domain.UserId;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FileDeckRepository implements DeckRepository {
@@ -30,6 +32,15 @@ public class FileDeckRepository implements DeckRepository {
   public Deck findById(DeckId deckId) {
     DeckDTO storedDeck = deckMap.get(deckId.value());
     return fromDTO(storedDeck);
+  }
+
+  @Override
+  public List<Deck> findByUserId(UserId userId) {
+    return deckMap.values().stream()
+        .filter(deck -> Objects.equals(deck.userId(), userId.value()))
+        .sorted(Comparator.comparing(DeckDTO::id))
+        .map(FileDeckRepository::fromDTO)
+        .collect(Collectors.toList());
   }
 
   @Override

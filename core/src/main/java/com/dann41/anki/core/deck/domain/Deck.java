@@ -1,5 +1,7 @@
 package com.dann41.anki.core.deck.domain;
 
+import com.dann41.anki.core.user.domain.UserId;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +15,8 @@ public class Deck {
 
   private final DeckId id;
   private final Questions questions;
+
+  private final UserId userId;
   private final List<QuestionId> nonAnsweredCards;
   private final Box redBox;
   private final Box orangeBox;
@@ -21,8 +25,9 @@ public class Deck {
 
   private boolean isDeleted;
 
-  public Deck(DeckId id, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session, boolean isDeleted) {
+  public Deck(DeckId id, UserId userId, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session, boolean isDeleted) {
     this.id = id;
+    this.userId = userId;
     this.questions = new Questions(question);
     this.nonAnsweredCards = nonAnsweredCards;
     this.redBox = redBox;
@@ -32,9 +37,10 @@ public class Deck {
     this.isDeleted = isDeleted;
   }
 
-  public static Deck create(String deckId, List<Question> cards) {
+  public static Deck create(String deckId, String userId, List<Question> cards) {
     return new Deck(
         new DeckId(deckId),
+        new UserId(userId),
         cards,
         toQuestionIdFromQuestion(cards),
         Box.create(Collections.emptyList()),
@@ -47,6 +53,7 @@ public class Deck {
 
   public static Deck restore(
       String deckId,
+      String userId,
       List<Question> questions,
       List<String> nonPlayedCards,
       List<String> cardsInRedBox,
@@ -57,6 +64,7 @@ public class Deck {
   ) {
     return new Deck(
         new DeckId(deckId),
+        new UserId(userId),
         questions,
         toQuestionIdList(nonPlayedCards),
         Box.create(cardsInRedBox),
@@ -79,6 +87,10 @@ public class Deck {
 
   public DeckId id() {
     return id;
+  }
+
+  public UserId userId() {
+    return userId;
   }
 
   public List<Question> questions() {

@@ -1,8 +1,5 @@
 package com.dann41.anki.core.deck.domain;
 
-import com.dann41.anki.core.deck.domain.Deck;
-import com.dann41.anki.core.deck.domain.Question;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,9 +9,12 @@ public class DeckMother {
 
   public static final String DECK_ID = "1234";
 
+  public static final String USER_ID = "blabla";
+
   public static Deck defaultDeck() {
     return Deck.restore(
         DECK_ID,
+        USER_ID,
         questions(),
         Collections.singletonList("A"),
         Arrays.asList("B", "C"),
@@ -28,6 +28,7 @@ public class DeckMother {
   public static Deck withoutUnanswered() {
     return Deck.restore(
         DECK_ID,
+        USER_ID,
         questions(),
         Collections.emptyList(),
         Arrays.asList("A", "B", "C"),
@@ -41,6 +42,7 @@ public class DeckMother {
   public static Deck withoutPendingForToday() {
     return Deck.restore(
         DECK_ID,
+        USER_ID,
         questions(),
         Collections.emptyList(),
         Collections.emptyList(),
@@ -54,6 +56,7 @@ public class DeckMother {
   public static Deck withSession(LocalDate session) {
     return Deck.restore(
         DECK_ID,
+        USER_ID,
         questions(),
         Collections.singletonList("A"),
         Collections.singletonList("B"),

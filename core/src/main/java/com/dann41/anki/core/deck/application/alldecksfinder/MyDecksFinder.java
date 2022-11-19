@@ -2,20 +2,21 @@ package com.dann41.anki.core.deck.application.alldecksfinder;
 
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckRepository;
+import com.dann41.anki.core.user.domain.UserId;
 
 import java.util.stream.Collectors;
 
-public class AllDecksFinder {
+public class MyDecksFinder {
 
   private final DeckRepository deckRepository;
 
-  public AllDecksFinder(DeckRepository deckRepository) {
+  public MyDecksFinder(DeckRepository deckRepository) {
     this.deckRepository = deckRepository;
   }
 
-  public DecksResponse execute() {
+  public DecksResponse execute(MyDecksFinderQuery query) {
     return new DecksResponse(
-        deckRepository.findAll()
+        deckRepository.findByUserId(new UserId(query.userId()))
             .stream()
             .map(this::toDeckSummary)
             .collect(Collectors.toList())

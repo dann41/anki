@@ -1,8 +1,8 @@
 package com.dann41.anki.core.deck.application.cardsolver;
 
-import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
+import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
 import com.dann41.anki.core.deck.domain.DeckRepository;
 import com.dann41.anki.core.deck.domain.SessionNotStartedException;
@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 
 import static com.dann41.anki.core.deck.domain.DeckMother.DECK_ID;
+import static com.dann41.anki.core.deck.domain.DeckMother.USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
@@ -46,7 +47,7 @@ public class CardSolverTest {
   @Test
   public void shouldPutNextCardInGreenBox() {
     givenExistingDeck();
-    SolveCardCommand command = new SolveCardCommand(DECK_ID, NEXT_CARD_ID, "green");
+    SolveCardCommand command = solveCardCommand(NEXT_CARD_ID, "green");
 
     cardSolver.execute(command);
 
@@ -56,7 +57,7 @@ public class CardSolverTest {
   @Test
   public void shouldPutNextCardInGreenBoxOnDeckWithoutUnplayedCards() {
     givenExistingDeckWithoutUnplayedCards();
-    SolveCardCommand command = new SolveCardCommand(DECK_ID, NEXT_CARD_ID, "green");
+    SolveCardCommand command = solveCardCommand(NEXT_CARD_ID, "green");
 
     cardSolver.execute(command);
 
@@ -66,7 +67,7 @@ public class CardSolverTest {
   @Test
   public void shouldFailWhenSolvingDifferentCardThanNextOne() {
     givenExistingDeck();
-    SolveCardCommand command = new SolveCardCommand(DECK_ID, ANOTHER_CARD_ID, "green");
+    SolveCardCommand command = solveCardCommand(ANOTHER_CARD_ID, "green");
 
     assertThatThrownBy(() -> cardSolver.execute(command))
         .isInstanceOf(IllegalArgumentException.class);
@@ -75,7 +76,7 @@ public class CardSolverTest {
   @Test
   public void shouldFailWithDeckWithInSession() {
     givenExistingDeckWithOldSession();
-    SolveCardCommand command = new SolveCardCommand(DECK_ID, ANOTHER_CARD_ID, "green");
+    SolveCardCommand command = solveCardCommand(ANOTHER_CARD_ID, "green");
 
     assertThatThrownBy(() -> cardSolver.execute(command))
         .isInstanceOf(SessionNotStartedException.class);
@@ -83,7 +84,7 @@ public class CardSolverTest {
 
   @Test
   public void shouldFailWhenDeckDoesNotExist() {
-    SolveCardCommand command = new SolveCardCommand(DECK_ID, ANOTHER_CARD_ID, "green");
+    SolveCardCommand command = solveCardCommand(ANOTHER_CARD_ID, "green");
 
     assertThatThrownBy(() -> cardSolver.execute(command))
         .isInstanceOf(DeckNotFoundException.class);
@@ -92,7 +93,7 @@ public class CardSolverTest {
   @Test
   public void shouldFailWhenInvalidBoxName() {
     givenExistingDeck();
-    SolveCardCommand command = new SolveCardCommand(DECK_ID, NEXT_CARD_ID, "patata");
+    SolveCardCommand command = solveCardCommand(NEXT_CARD_ID, "patata");
 
     assertThatThrownBy(() -> cardSolver.execute(command))
         .isInstanceOf(IllegalArgumentException.class)
@@ -121,6 +122,10 @@ public class CardSolverTest {
     Deck savedDeck = captor.getValue();
     assertThat(savedDeck.unansweredCards()).doesNotContain("A");
     assertThat(savedDeck.cardsInGreenBox()).last().isEqualTo("A");
+  }
+
+  private static SolveCardCommand solveCardCommand(String nextCardId, String green) {
+    return new SolveCardCommand(DECK_ID, USER_ID, nextCardId, green);
   }
 
 }

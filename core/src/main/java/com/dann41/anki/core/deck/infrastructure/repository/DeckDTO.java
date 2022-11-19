@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public record DeckDTO(
     @JsonProperty("id") String id,
+    @JsonProperty("userId") String userId,
     @JsonProperty("questions") List<QuestionDTO> questions,
     @JsonProperty("unansweredCards") List<String> unansweredCards,
     @JsonProperty("cardsInRedBox") List<String> cardsInRedBox,
@@ -21,6 +22,7 @@ public record DeckDTO(
   public Deck toDeck() {
     return Deck.restore(
         id(),
+        userId(),
         questions().stream().map(QuestionDTO::toQuestion).collect(Collectors.toList()),
         unansweredCards(),
         cardsInRedBox(),
@@ -34,6 +36,7 @@ public record DeckDTO(
   public static DeckDTO fromDeck(Deck deck) {
     return new DeckDTO(
         deck.id().value(),
+        deck.userId().value(),
         deck.questions().stream().map(QuestionDTO::fromQuestion).collect(Collectors.toList()),
         deck.unansweredCards(),
         deck.cardsInRedBox(),
