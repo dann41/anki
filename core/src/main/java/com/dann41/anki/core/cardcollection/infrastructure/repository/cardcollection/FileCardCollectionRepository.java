@@ -1,9 +1,9 @@
 package com.dann41.anki.core.cardcollection.infrastructure.repository.cardcollection;
 
-import com.dann41.anki.core.cardcollection.domain.card.CardDTO;
 import com.dann41.anki.core.cardcollection.domain.CardCollection;
 import com.dann41.anki.core.cardcollection.domain.CardCollectionId;
 import com.dann41.anki.core.cardcollection.domain.CardCollectionRepository;
+import com.dann41.anki.core.cardcollection.domain.card.CardDTO;
 
 import java.util.Collection;
 import java.util.Map;

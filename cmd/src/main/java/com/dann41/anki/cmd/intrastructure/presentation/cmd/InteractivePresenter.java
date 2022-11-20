@@ -17,6 +17,11 @@ import com.dann41.anki.core.deck.application.statefinder.StateFinder;
 import com.dann41.anki.core.deck.application.statefinder.StateFinderQuery;
 import com.dann41.anki.core.deck.application.statefinder.StateResponse;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
+import com.dann41.anki.core.user.application.authenticator.UserAuthenticator;
+import com.dann41.anki.core.user.application.authenticator.UserAuthenticatorCommand;
+import com.dann41.anki.core.user.application.userfinder.UserFinder;
+import com.dann41.anki.core.user.application.userfinder.UserResponse;
+import com.dann41.anki.core.user.domain.UserNotFoundException;
 import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
@@ -52,7 +57,25 @@ public class InteractivePresenter implements Presenter {
 
   public void onStart() {
     view.displayWelcome();
-    view.displayMainMenu();
+    view.displayLogin();
+  }
+
+  @Override
+  public void login(String username, String password) {
+    UserAuthenticator authenticator = appContext.getBean(UserAuthenticator.class);
+    try {
+      authenticator.execute(new UserAuthenticatorCommand(username, password));
+
+      UserFinder userFinder = appContext.getBean(UserFinder.class);
+      UserResponse user = userFinder.execute(username);
+      this.userId = user.id();
+
+      view.displayMessage("Login succeed");
+      view.displayMainMenu();
+    } catch (UserNotFoundException e) {
+      view.displayError("Invalid login. The user does not exist or the password is invalid");
+      view.displayLogin();
+    }
   }
 
   @Override

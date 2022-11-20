@@ -8,6 +8,11 @@ public class UserNotFoundException extends RuntimeException {
     this.userId = userId;
   }
 
+  public UserNotFoundException(Username username) {
+    super("User not found with username " + username);
+    this.userId = null;
+  }
+
   public UserId userId() {
     return userId;
   }

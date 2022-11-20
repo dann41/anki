@@ -2,9 +2,9 @@ package com.dann41.anki.core.user.application.authenticator;
 
 import com.dann41.anki.core.user.domain.PasswordMatcher;
 import com.dann41.anki.core.user.domain.User;
-import com.dann41.anki.core.user.domain.UserId;
 import com.dann41.anki.core.user.domain.UserNotFoundException;
 import com.dann41.anki.core.user.domain.UserRepository;
+import com.dann41.anki.core.user.domain.Username;
 
 public class UserAuthenticator {
   private final UserRepository userRepository;
@@ -16,14 +16,14 @@ public class UserAuthenticator {
   }
 
   public void execute(UserAuthenticatorCommand command) {
-    UserId id = new UserId(command.userId());
-    User user = userRepository.findById(new UserId(command.userId()));
+    Username username = new Username(command.username());
+    User user = userRepository.findByUsername(new Username(command.username()));
     if (user == null) {
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundException(username);
     }
 
     if (!user.matchesPassword(command.password(), passwordMatcher)) {
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundException(username);
     }
   }
 

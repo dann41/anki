@@ -30,7 +30,7 @@ public class UserConfiguration {
 
   @Bean
   PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(512);
+    return new BCryptPasswordEncoder(12);
   }
 
 }

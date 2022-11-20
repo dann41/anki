@@ -1,9 +1,9 @@
 package com.dann41.anki.core.user.application.authenticator;
 
-import com.dann41.anki.core.user.domain.UserId;
 import com.dann41.anki.core.user.domain.UserMother;
 import com.dann41.anki.core.user.domain.UserNotFoundException;
 import com.dann41.anki.core.user.domain.UserRepository;
+import com.dann41.anki.core.user.domain.Username;
 import com.dann41.anki.core.user.infrastructure.domain.PasswordEncoderMatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static com.dann41.anki.core.user.domain.UserMother.USER_ID;
+import static com.dann41.anki.core.user.domain.UserMother.USER_NAME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
@@ -33,7 +33,7 @@ class UserAuthenticatorTest {
 
   @Test
   public void shouldSucceedWhenPasswordIsValid() {
-    given(userRepository.findById(new UserId(USER_ID)))
+    given(userRepository.findByUsername(new Username(USER_NAME)))
         .willReturn(UserMother.defaultUser());
 
     userAuthenticator.execute(validPasswordCommand());
@@ -47,7 +47,7 @@ class UserAuthenticatorTest {
 
   @Test
   public void shouldThrowUserNotFoundExceptionWhenPasswordInvalid() {
-    given(userRepository.findById(new UserId(USER_ID)))
+    given(userRepository.findByUsername(new Username(USER_NAME)))
         .willReturn(UserMother.defaultUser());
 
     assertThatThrownBy(() -> userAuthenticator.execute(invalidPasswordCommand()))
@@ -55,10 +55,10 @@ class UserAuthenticatorTest {
   }
 
   private UserAuthenticatorCommand validPasswordCommand() {
-    return new UserAuthenticatorCommand(USER_ID, VALID_PASSWORD);
+    return new UserAuthenticatorCommand(USER_NAME, VALID_PASSWORD);
   }
 
   private UserAuthenticatorCommand invalidPasswordCommand() {
-    return new UserAuthenticatorCommand(USER_ID, INVALID_PASSWORD);
+    return new UserAuthenticatorCommand(USER_NAME, INVALID_PASSWORD);
   }
 }

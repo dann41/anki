@@ -35,6 +35,16 @@ public class ConsoleView implements View {
   }
 
   @Override
+  public void displayLogin() {
+    System.out.print("Username: ");
+    String username = cmdTools.readLine();
+    System.out.print("Password: ");
+    String password = cmdTools.readLine();
+
+    presenter.login(username, password);
+  }
+
+  @Override
   public void displayMainMenu() {
     System.out.println("What do you want to do?");
     System.out.println("1. Play an existing deck");
@@ -49,7 +59,11 @@ public class ConsoleView implements View {
       System.out.println("Invalid option.");
       displayMainMenu();
     }
+  }
 
+  @Override
+  public void displayMessage(String message) {
+    System.out.println(message);
   }
 
   @Override
@@ -115,7 +129,7 @@ public class ConsoleView implements View {
 
   @Override
   public void displayError(String errorMessage) {
-    System.err.println(errorMessage);
+    System.out.println("ERROR: " + errorMessage);
   }
 
   @Override

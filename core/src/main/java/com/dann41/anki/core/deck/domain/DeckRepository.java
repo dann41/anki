@@ -3,7 +3,6 @@ package com.dann41.anki.core.deck.domain;
 import com.dann41.anki.core.user.domain.UserId;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DeckRepository {
 

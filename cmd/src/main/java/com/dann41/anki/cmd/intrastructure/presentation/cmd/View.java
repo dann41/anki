@@ -12,6 +12,10 @@ public interface View {
 
   void displayWelcome();
 
+  void displayLogin();
+
+  void displayMessage(String message);
+
   void displayMainMenu();
 
   void displayDecks(List<DeckSummary> decks);

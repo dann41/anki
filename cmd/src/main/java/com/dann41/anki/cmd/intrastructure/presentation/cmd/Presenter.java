@@ -4,6 +4,8 @@ public interface Presenter {
 
   void onViewShown(View view);
 
+  void login(String user, String password);
+
   void playDeck(String deckId);
 
   void createDeck(String collectionId);
