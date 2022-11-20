@@ -1,7 +1,9 @@
-package com.dann41.anki.core.user.application;
+package com.dann41.anki.core.user.application.userfinder;
 
-import com.dann41.anki.core.user.domain.User;
+import com.dann41.anki.core.user.application.userfinder.UserFinder;
+import com.dann41.anki.core.user.application.userfinder.UserResponse;
 import com.dann41.anki.core.user.domain.UserId;
+import com.dann41.anki.core.user.domain.UserMother;
 import com.dann41.anki.core.user.domain.UserNotFoundException;
 import com.dann41.anki.core.user.domain.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -10,14 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.dann41.anki.core.user.domain.UserMother.USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class UserFinderTest {
-
-  private static final String USER_ID = "1234";
 
   @Mock
   private UserRepository userRepository;
@@ -28,7 +29,7 @@ class UserFinderTest {
   @Test
   public void shouldReturnUserWithId() {
     given(userRepository.findById(new UserId(USER_ID)))
-        .willReturn(new User(new UserId(USER_ID)));
+        .willReturn(UserMother.defaultUser());
 
     UserResponse userResponse = userFinder.execute(USER_ID);
 

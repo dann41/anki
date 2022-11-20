@@ -1,4 +1,4 @@
-package com.dann41.anki.core.user.application;
+package com.dann41.anki.core.user.application.userfinder;
 
 import com.dann41.anki.core.user.domain.User;
 import com.dann41.anki.core.user.domain.UserId;
