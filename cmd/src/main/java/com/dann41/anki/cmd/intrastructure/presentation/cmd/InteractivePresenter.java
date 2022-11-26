@@ -1,5 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinderQuery;
@@ -70,7 +71,7 @@ public class InteractivePresenter implements Presenter {
       UserResponse user = userFinder.execute(username);
       this.userId = user.id();
 
-      view.displayMessage("Login succeed");
+      view.displayLoginSucceed();
       view.displayMainMenu();
     } catch (UserNotFoundException e) {
       view.displayError("Invalid login. The user does not exist or the password is invalid");
@@ -99,7 +100,7 @@ public class InteractivePresenter implements Presenter {
       sessionStarter.execute(new StartSessionCommand(deckId, userId));
     } catch (DeckNotFoundException e) {
       if (collectionId == null) {
-        view.displayError("Cannot find deckId for id " + e.deckId().toString());
+        view.displayError("You must specify a collection");
         view.displayMainMenu();
         return;
       }
@@ -108,8 +109,10 @@ public class InteractivePresenter implements Presenter {
       try {
         deckCreator.execute(new CreateDeckCommand(deckId, userId, collectionId));
         sessionStarter.execute(new StartSessionCommand(deckId, userId));
+        view.displayMessage("Deck created with id " + deckId);
+        view.displayMainMenu();
       } catch (CollectionNotFoundException exception) {
-        view.displayError("Cannot find collectionId for id " + e.deckId().toString());
+        view.displayError("Cannot find collection for id " + collectionId);
         view.displayMainMenu();
       }
     }
@@ -185,5 +188,19 @@ public class InteractivePresenter implements Presenter {
   public void loadCollections() {
     var allCollectionsFinder = appContext.getBean(AllCollectionsFinder.class);
     view.displayCollections(allCollectionsFinder.execute().collections());
+  }
+
+  @Override
+  public void createCollection(String resourceName, String collectionName) {
+    var importer = appContext.getBean(FileCollectionImporter.class);
+    var collectionId = UUID.randomUUID().toString();
+    try {
+      importer.importCollection(resourceName, collectionId, collectionName);
+      view.displayMessage("Collection created with id " + collectionId);
+      view.displayMainMenu();
+    } catch (RuntimeException e) {
+      view.displayError("Cannot create collection. Reason: " + e.getMessage());
+      view.displayMainMenu();
+    }
   }
 }

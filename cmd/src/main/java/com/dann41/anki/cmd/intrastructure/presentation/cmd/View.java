@@ -33,4 +33,6 @@ public interface View {
   void displayFarewell();
 
   void displayComeBackLater();
+
+  void displayLoginSucceed();
 }

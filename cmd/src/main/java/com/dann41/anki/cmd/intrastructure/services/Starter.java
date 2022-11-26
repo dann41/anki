@@ -1,9 +1,12 @@
-package com.dann41.anki.cmd.intrastructure.presentation.cmd;
+package com.dann41.anki.cmd.intrastructure.services;
 
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.ConsoleView;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.InteractivePresenter;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.Presenter;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.View;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-@Service
 public class Starter {
 
   private final ApplicationContext appContext;

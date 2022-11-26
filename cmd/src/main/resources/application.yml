@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/anki
+    username: dbuser
+    password: dbpass
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 4

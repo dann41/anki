@@ -49,21 +49,37 @@ public class ConsoleView implements View {
     System.out.println("What do you want to do?");
     System.out.println("1. Play an existing deck");
     System.out.println("2. Create a new deck");
+    System.out.println("3. Import collection from file");
     System.out.print("Choose an option: ");
     String option = cmdTools.readLine();
     if ("1".equals(option)) {
       presenter.loadDecks();
     } else if ("2".equals(option)) {
       presenter.loadCollections();
+    } else if ("3".equals(option)) {
+      displayCollectionImportDialog();
     } else {
-      System.out.println("Invalid option.");
+      cmdTools.printError("Invalid option");
       displayMainMenu();
     }
   }
 
+  private void displayCollectionImportDialog() {
+    System.out.println("Import card collection from file (e.g. core/src/main/resources/cards.tsv): ");
+    String resourceName = cmdTools.readLine();
+    System.out.println("Name of the collection: ");
+    String collectionName = cmdTools.readLine();
+    presenter.createCollection(resourceName, collectionName);
+  }
+
+  @Override
+  public void displayLoginSucceed() {
+    cmdTools.printInfo("Login succeed");
+  }
+
   @Override
   public void displayMessage(String message) {
-    System.out.println(message);
+    cmdTools.printInfo(message);
   }
 
   @Override
@@ -82,8 +98,10 @@ public class ConsoleView implements View {
   @Override
   public void displayCollections(List<CardCollectionSummary> collections) {
     for (CardCollectionSummary collection : collections) {
-      System.out.println(collection.id() + " - " + collection.name());
-      System.out.println(collection.description());
+      System.out.println(collection.name() + " (ID: " + collection.id() + ")");
+      if (collection.description() != null && !collection.description().isBlank()) {
+        System.out.println(collection.description());
+      }
       System.out.println("Number of questions: " + collection.numberOfQuestions());
       System.out.println();
     }
@@ -113,9 +131,6 @@ public class ConsoleView implements View {
     System.out.println("NEXT QUESTION: " + cardResponse.question());
     countDown("Answer will reveal in 5 seconds.", 5);
 
-    //System.out.println("Hit enter to reveal the answer?");
-    //readLine();
-
     System.out.println("Answer is: " + cardResponse.answer());
     requestBoxCategorization(cardResponse.id());
   }
@@ -129,17 +144,17 @@ public class ConsoleView implements View {
 
   @Override
   public void displayError(String errorMessage) {
-    System.out.println("ERROR: " + errorMessage);
+    cmdTools.printError(errorMessage);
   }
 
   @Override
   public void displayComeBackLater() {
-    System.out.println("You're done for now. There are some red cards that you may want to review later.");
+    cmdTools.printInfo("You're done for now. There are some red cards that you may want to review later.");
   }
 
   @Override
   public void displayFarewell() {
-    System.out.println("You're done for today. Come back tomorrow.");
+    cmdTools.printInfo("You're done for today. Come back tomorrow.");
   }
 
   public void countDown(String message, int seconds) {

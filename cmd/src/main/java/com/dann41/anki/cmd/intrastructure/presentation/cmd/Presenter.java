@@ -15,4 +15,6 @@ public interface Presenter {
   void loadDecks();
 
   void loadCollections();
+
+  void createCollection(String resourceName, String collectionName);
 }

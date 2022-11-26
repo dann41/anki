@@ -1,0 +1,14 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:15.1
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: dbpass
+      POSTGRES_USER: dbuse r
+      POSTGRES_DB: anki
+    ports:
+      - "5432:5432"
