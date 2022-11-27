@@ -20,6 +20,6 @@ public class UserFinder {
       throw new UserNotFoundException(usernameVO);
     }
 
-    return new UserResponse(user.userId().value(), user.userName().value());
+    return new UserResponse(user.userId(), user.userName());
   }
 }

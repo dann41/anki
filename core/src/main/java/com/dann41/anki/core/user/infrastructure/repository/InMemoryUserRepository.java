@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryUserRepository implements UserRepository {
 
-  private final Map<UserId, User> users = new ConcurrentHashMap<>();
+  private final Map<String, User> users = new ConcurrentHashMap<>();
 
   public InMemoryUserRepository(PasswordEncoder passwordEncoder) {
 
@@ -21,7 +21,7 @@ public class InMemoryUserRepository implements UserRepository {
     Username username = new Username("dann41");
     PasswordHash passwordHash = new PasswordHash(passwordEncoder.encode("abcd"));
 
-    users.put(userId, new User(userId, username, passwordHash));
+    users.put(userId.value(), new User(userId, username, passwordHash));
   }
 
   @Override
@@ -35,5 +35,10 @@ public class InMemoryUserRepository implements UserRepository {
         .filter(user -> Objects.equals(username, user.userName()))
         .findFirst()
         .orElse(null);
+  }
+
+  @Override
+  public void save(User user) {
+    users.put(user.userId(), user);
   }
 }

@@ -35,6 +35,24 @@ public class ConsoleView implements View {
   }
 
   @Override
+  public void displayAuthenticationDialog() {
+    System.out.println("What do you want to do?");
+    System.out.println(" 1. Create a new user");
+    System.out.println(" 2. Login existing user");
+
+    String action = cmdTools.readLine();
+
+    switch (action) {
+      case "1" -> displaySignUp();
+      case "2" -> displayLogin();
+      default -> {
+        cmdTools.printError("Unknown action " + action);
+        displayAuthenticationDialog();
+      }
+    }
+  }
+
+  @Override
   public void displayLogin() {
     System.out.print("Username: ");
     String username = cmdTools.readLine();
@@ -42,6 +60,17 @@ public class ConsoleView implements View {
     String password = cmdTools.readLine();
 
     presenter.login(username, password);
+  }
+
+  @Override
+  public void displaySignUp() {
+    System.out.println("Create a new user");
+    System.out.print("Username: ");
+    String username = cmdTools.readLine();
+    System.out.print("Password: ");
+    String password = cmdTools.readLine();
+
+    presenter.register(username, password);
   }
 
   @Override
@@ -84,6 +113,11 @@ public class ConsoleView implements View {
 
   @Override
   public void displayDecks(List<DeckSummary> decks) {
+    if (decks.isEmpty()) {
+      cmdTools.printInfo("No decks found. Please create one");
+      displayMainMenu();
+    }
+
     for (DeckSummary deck : decks) {
       System.out.println(
           deck.id() + " - " + deck.numberOfQuestions() + " questions. Last played on " + deck.lastSession().toString()

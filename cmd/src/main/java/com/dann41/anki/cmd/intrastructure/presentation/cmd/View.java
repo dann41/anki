@@ -16,6 +16,8 @@ public interface View {
 
   void displayMessage(String message);
 
+  void displaySignUp();
+
   void displayMainMenu();
 
   void displayDecks(List<DeckSummary> decks);
@@ -35,4 +37,6 @@ public interface View {
   void displayComeBackLater();
 
   void displayLoginSucceed();
+
+  void displayAuthenticationDialog();
 }

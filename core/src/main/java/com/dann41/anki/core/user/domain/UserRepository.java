@@ -4,4 +4,6 @@ public interface UserRepository {
   User findById(UserId userId);
 
   User findByUsername(Username username);
+
+  void save(User user);
 }

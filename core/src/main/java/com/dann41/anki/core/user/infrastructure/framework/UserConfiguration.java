@@ -2,6 +2,7 @@ package com.dann41.anki.core.user.infrastructure.framework;
 
 import com.dann41.anki.core.user.application.authenticator.UserAuthenticator;
 import com.dann41.anki.core.user.application.userfinder.UserFinder;
+import com.dann41.anki.core.user.application.userregistrerer.UserRegistrerer;
 import com.dann41.anki.core.user.domain.PasswordMatcher;
 import com.dann41.anki.core.user.domain.UserRepository;
 import com.dann41.anki.core.user.infrastructure.domain.PasswordEncoderMatcher;
@@ -16,6 +17,11 @@ public class UserConfiguration {
   @Bean
   UserFinder userFinder(UserRepository userRepository) {
     return new UserFinder(userRepository);
+  }
+
+  @Bean
+  UserRegistrerer userRegistrerer(UserRepository userRepository) {
+    return new UserRegistrerer(userRepository);
   }
 
   @Bean

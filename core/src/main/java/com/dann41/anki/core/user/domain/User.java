@@ -24,12 +24,16 @@ public class User {
     this.passwordHash = passwordHash;
   }
 
-  public UserId userId() {
-    return userId;
+  public String userId() {
+    return userId.value();
   }
 
-  public Username userName() {
-    return userName;
+  public String userName() {
+    return userName.value();
+  }
+
+  public String passwordHash() {
+    return passwordHash.value();
   }
 
   public boolean matchesPassword(CharSequence password, PasswordMatcher passwordMatcher) {
