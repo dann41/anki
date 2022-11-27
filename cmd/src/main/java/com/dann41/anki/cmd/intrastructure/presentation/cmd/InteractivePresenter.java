@@ -115,7 +115,7 @@ public class InteractivePresenter implements Presenter {
       );
       view.displayMainMenu();
     } catch (CollectionNotFoundException exception) {
-      view.displayError("Cannot find collection for id " + viewContext.selectedCollectionId());
+      view.displayError("Cannot find collection for id " + collectionId);
       view.displayMainMenu();
     }
   }

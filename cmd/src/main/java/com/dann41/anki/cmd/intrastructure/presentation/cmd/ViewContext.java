@@ -4,7 +4,6 @@ public class ViewContext {
   private String currentDeckId;
   private String userId;
   private String username;
-  private String collectionId;
 
   public void login(String userId, String username) {
     this.userId = userId;
@@ -13,14 +12,6 @@ public class ViewContext {
 
   public boolean isLoggedIn() {
     return userId != null && !userId.isBlank();
-  }
-
-  public void selectCollection(String collectionId) {
-    this.collectionId = collectionId;
-  }
-
-  public boolean hasCollectionSelected() {
-   return collectionId != null && !collectionId.isBlank();
   }
 
   public void playDeck(String deckId) {
@@ -33,10 +24,6 @@ public class ViewContext {
 
   public String username() {
     return username;
-  }
-
-  public String selectedCollectionId() {
-    return collectionId;
   }
 
   public String currentDeckId() {
