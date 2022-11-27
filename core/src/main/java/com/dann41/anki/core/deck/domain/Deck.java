@@ -1,5 +1,6 @@
 package com.dann41.anki.core.deck.domain;
 
+import com.dann41.anki.core.cardcollection.domain.CardCollectionId;
 import com.dann41.anki.core.user.domain.UserId;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ public class Deck {
   private final DeckId id;
   private final Questions questions;
 
+  private final CardCollectionId collectionId;
   private final UserId userId;
   private final List<QuestionId> nonAnsweredCards;
   private final Box redBox;
@@ -25,9 +27,10 @@ public class Deck {
 
   private boolean isDeleted;
 
-  public Deck(DeckId id, UserId userId, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session, boolean isDeleted) {
+  public Deck(DeckId id, UserId userId, String collectionId, List<Question> question, List<QuestionId> nonAnsweredCards, Box redBox, Box orangeBox, Box greenBox, Session session, boolean isDeleted) {
     this.id = id;
     this.userId = userId;
+    this.collectionId = new CardCollectionId(collectionId);
     this.questions = new Questions(question);
     this.nonAnsweredCards = nonAnsweredCards;
     this.redBox = redBox;
@@ -37,10 +40,11 @@ public class Deck {
     this.isDeleted = isDeleted;
   }
 
-  public static Deck create(String deckId, String userId, List<Question> cards) {
+  public static Deck create(String deckId, String userId, String collectionId, List<Question> cards) {
     return new Deck(
         new DeckId(deckId),
         new UserId(userId),
+        collectionId,
         cards,
         toQuestionIdFromQuestion(cards),
         Box.create(Collections.emptyList()),
@@ -54,6 +58,7 @@ public class Deck {
   public static Deck restore(
       String deckId,
       String userId,
+      String collectionId,
       List<Question> questions,
       List<String> nonPlayedCards,
       List<String> cardsInRedBox,
@@ -65,6 +70,7 @@ public class Deck {
     return new Deck(
         new DeckId(deckId),
         new UserId(userId),
+        collectionId,
         questions,
         toQuestionIdList(nonPlayedCards),
         Box.create(cardsInRedBox),
@@ -93,6 +99,9 @@ public class Deck {
     return userId;
   }
 
+  public String collectionId() {
+    return collectionId.value();
+  }
   public List<Question> questions() {
     return questions.value();
   }

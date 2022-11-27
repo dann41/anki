@@ -28,7 +28,7 @@ public class DeckCreator {
       throw new DeckAlreadyExistsException(id);
     }
 
-    Deck newDeck = Deck.create(command.deckId(), command.userId(), loadCards(command.collectionId()));
+    Deck newDeck = Deck.create(command.deckId(), command.userId(), command.collectionId(), loadCards(command.collectionId()));
     deckRepository.save(newDeck);
   }
 

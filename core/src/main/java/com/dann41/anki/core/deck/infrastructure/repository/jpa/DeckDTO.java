@@ -1,4 +1,4 @@
-package com.dann41.anki.core.deck.infrastructure.repository;
+package com.dann41.anki.core.deck.infrastructure.repository.jpa;
 
 import com.dann41.anki.core.deck.domain.Deck;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public record DeckDTO(
     @JsonProperty("id") String id,
     @JsonProperty("userId") String userId,
+    @JsonProperty("collectionId") String collectionId,
     @JsonProperty("questions") List<QuestionDTO> questions,
     @JsonProperty("unansweredCards") List<String> unansweredCards,
     @JsonProperty("cardsInRedBox") List<String> cardsInRedBox,
@@ -19,24 +20,11 @@ public record DeckDTO(
     @JsonProperty("isDeleted") boolean isDeleted
 ) {
 
-  public Deck toDeck() {
-    return Deck.restore(
-        id(),
-        userId(),
-        questions().stream().map(QuestionDTO::toQuestion).collect(Collectors.toList()),
-        unansweredCards(),
-        cardsInRedBox(),
-        cardsInOrangeBox(),
-        cardsInGreenBox(),
-        session(),
-        isDeleted()
-    );
-  }
-
-  public static DeckDTO fromDeck(Deck deck) {
+  public static DeckDTO from(Deck deck) {
     return new DeckDTO(
         deck.id().value(),
         deck.userId().value(),
+        deck.collectionId(),
         deck.questions().stream().map(QuestionDTO::fromQuestion).collect(Collectors.toList()),
         deck.unansweredCards(),
         deck.cardsInRedBox(),
@@ -44,6 +32,21 @@ public record DeckDTO(
         deck.cardsInGreenBox(),
         deck.session(),
         deck.isDeleted()
+    );
+  }
+
+  public Deck toDomain() {
+    return Deck.restore(
+        this.id(),
+        this.userId(),
+        this.collectionId(),
+        this.questions().stream().map(QuestionDTO::toQuestion).collect(Collectors.toList()),
+        this.unansweredCards(),
+        this.cardsInRedBox(),
+        this.cardsInOrangeBox(),
+        this.cardsInGreenBox(),
+        this.session(),
+        this.isDeleted()
     );
   }
 }

@@ -1,4 +1,4 @@
-package com.dann41.anki.core.deck.infrastructure.repository;
+package com.dann41.anki.core.deck.infrastructure.repository.jpa;
 
 import com.dann41.anki.core.deck.domain.Question;
 import com.fasterxml.jackson.annotation.JsonProperty;
