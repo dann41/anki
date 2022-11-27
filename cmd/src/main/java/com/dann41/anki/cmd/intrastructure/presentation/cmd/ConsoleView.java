@@ -7,15 +7,19 @@ import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ConsoleView implements View {
 
+  public static final String LIST_DECKS = "1";
+  public static final String LIST_COLLECTIONS = "2";
+  public static final String IMPORT_COLLECTIONS = "3";
   private final Presenter presenter;
   private final CmdTools cmdTools;
 
   public ConsoleView(Presenter presenter) {
     this.presenter = presenter;
-    this.cmdTools = new CmdTools();
+    cmdTools = new CmdTools();
   }
 
   @Override
@@ -29,31 +33,34 @@ public class ConsoleView implements View {
 
   @Override
   public void displayWelcome() {
-    System.out.println("Welcome to ANKI 2.0");
-    System.out.println("The best tool to study stuff");
-    System.out.println();
+    System.out.println("""
+        Welcome to ANKI 2.0
+        The best tool to study stuff
+        """);
   }
 
   @Override
   public void displayAuthenticationDialog() {
-    System.out.println("What do you want to do?");
-    System.out.println(" 1. Create a new user");
-    System.out.println(" 2. Login existing user");
+    var authMenu = new CmdMenu(
+        "In order to play Anki you need to login",
+        List.of(
+            CmdMenuItem.of(" 1. Create a new user", "1"),
+            CmdMenuItem.of(" 2. Login existing user", "2")
+        ),
+        "Choose an option: "
+    );
 
-    String action = cmdTools.readLine();
+    String action = cmdTools.printMenu(authMenu);
 
     switch (action) {
       case "1" -> displaySignUp();
       case "2" -> displayLogin();
-      default -> {
-        cmdTools.printError("Unknown action " + action);
-        displayAuthenticationDialog();
-      }
     }
   }
 
   @Override
   public void displayLogin() {
+    System.out.println("--- LOGIN ---");
     System.out.print("Username: ");
     String username = cmdTools.readLine();
     System.out.print("Password: ");
@@ -64,7 +71,7 @@ public class ConsoleView implements View {
 
   @Override
   public void displaySignUp() {
-    System.out.println("Create a new user");
+    System.out.println("--- REGISTER ---");
     System.out.print("Username: ");
     String username = cmdTools.readLine();
     System.out.print("Password: ");
@@ -75,26 +82,28 @@ public class ConsoleView implements View {
 
   @Override
   public void displayMainMenu() {
-    System.out.println("What do you want to do?");
-    System.out.println("1. Play an existing deck");
-    System.out.println("2. Create a new deck");
-    System.out.println("3. Import collection from file");
-    System.out.print("Choose an option: ");
-    String option = cmdTools.readLine();
-    if ("1".equals(option)) {
-      presenter.loadDecks();
-    } else if ("2".equals(option)) {
-      presenter.loadCollections();
-    } else if ("3".equals(option)) {
-      displayCollectionImportDialog();
-    } else {
-      cmdTools.printError("Invalid option");
-      displayMainMenu();
+    var menu = new CmdMenu(
+        "--- ANKI Menu ---",
+        List.of(
+            CmdMenuItem.of(" 1. Play an existing deck", "1"),
+            CmdMenuItem.of(" 2. Create a new deck", "2"),
+            CmdMenuItem.of(" 3. Import collection from file", "3")
+        ),
+        "Choose an option: "
+    );
+
+    String option = cmdTools.printMenu(menu);
+
+    switch (option) {
+      case LIST_DECKS -> presenter.loadDecks();
+      case LIST_COLLECTIONS -> presenter.loadCollections();
+      case IMPORT_COLLECTIONS -> displayCollectionImportDialog();
+      default -> displayMainMenu();
     }
   }
 
   private void displayCollectionImportDialog() {
-    System.out.println("Import card collection from file (e.g. core/src/main/resources/cards.tsv): ");
+    System.out.println("Select file to import (e.g. core/src/main/resources/cards.tsv): ");
     String resourceName = cmdTools.readLine();
     System.out.println("Name of the collection: ");
     String collectionName = cmdTools.readLine();
@@ -118,41 +127,73 @@ public class ConsoleView implements View {
       displayMainMenu();
     }
 
-    for (DeckSummary deck : decks) {
-      System.out.println(
-          deck.id() + " - " + deck.numberOfQuestions() + " questions. Last played on " + deck.lastSession().toString()
-      );
+    var deckSelector = new CmdMenu(
+        "--- My decks ---",
+        decks.stream().map(
+            deck -> CmdMenuItem.of(
+                deck.id() + " - " + deck.numberOfQuestions() + " questions. Last played on " +
+                    deck.lastSession().toString(),
+                deck.id()
+            )
+        ).collect(Collectors.toList()),
+        "Choose the deck to play: "
+    );
+
+    String deckId = cmdTools.printMenu(deckSelector);
+
+    if (deckId.isEmpty()) {
+      System.out.println("No deck selected. Back to main menu");
+      displayMainMenu();
+      return;
     }
 
-    System.out.print("Choose the deck to play: ");
-    String deckId = cmdTools.readLine();
     presenter.playDeck(deckId);
+  }
+
+  private String getCollectionString(CardCollectionSummary collection) {
+    return """
+        %s (ID: %s)
+        %s
+        Number of questions: %d
+        """.formatted(
+        collection.name(),
+        collection.id(),
+        collection.description(),
+        collection.numberOfQuestions()
+    );
   }
 
   @Override
   public void displayCollections(List<CardCollectionSummary> collections) {
-    for (CardCollectionSummary collection : collections) {
-      System.out.println(collection.name() + " (ID: " + collection.id() + ")");
-      if (collection.description() != null && !collection.description().isBlank()) {
-        System.out.println(collection.description());
-      }
-      System.out.println("Number of questions: " + collection.numberOfQuestions());
-      System.out.println();
+    var collectionSelector = new CmdMenu(
+        "--- Collections ---",
+        collections.stream().map(
+            collection -> CmdMenuItem.of(
+                getCollectionString(collection),
+                collection.id()
+            )
+        ).collect(Collectors.toList()),
+        "Choose a collection to create a deck from:"
+    );
+
+    String collectionId = cmdTools.printMenu(collectionSelector);
+    if (collectionId.isEmpty()) {
+      displayMainMenu();
+      return;
     }
 
-    System.out.print("Choose a collection to create a deck from: ");
-    String collectionId = cmdTools.readLine();
     presenter.createDeck(collectionId);
   }
 
   @Override
   public void displayState(AnkiState ankiState) {
-    System.out.printf("State \n" +
-            "\t- Total Cards: %d\n" +
-            "\t- Cards in green box: %d \n" +
-            "\t- Cards in orange box: %d \n" +
-            "\t- Cards in red box: %d \n" +
-            "\t- Last played: %s]%n",
+    System.out.printf("""
+            State
+            \t- Total Cards: %d
+            \t- Cards in green box: %d
+            \t- Cards in orange box: %d
+            \t- Cards in red box: %d
+            \t- Last played: %s]%n""",
         ankiState.totalCards(),
         ankiState.cardsInGreenBox(),
         ankiState.cardsInOrangeBox(),

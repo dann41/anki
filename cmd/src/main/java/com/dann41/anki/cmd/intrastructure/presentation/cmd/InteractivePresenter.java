@@ -178,8 +178,9 @@ public class InteractivePresenter implements Presenter {
     return cardPicker.execute(new CardPickerQuery(viewContext.currentDeckId(), viewContext.userId()));
   }
 
-  private static AnkiState toAnkiState(StateResponse stateResponse) {
+  private AnkiState toAnkiState(StateResponse stateResponse) {
     return new AnkiState(
+        viewContext.currentDeckId(),
         stateResponse.totalCards(),
         stateResponse.redCards(),
         stateResponse.orangeCards(),

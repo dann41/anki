@@ -38,6 +38,34 @@ public class CmdTools {
     System.out.println(ANSI_RED + "❌ " + message + ANSI_RESET);
   }
 
+  public String printMenu(CmdMenu menu) {
+    return printMenuWithRetries(menu, 3);
+  }
+
+  public String printMenuWithRetries(CmdMenu menu, int maxTries) {
+    int currentTries = 0;
+    while (currentTries < maxTries) {
+      System.out.println(menu.title());
+      menu.items().forEach(item -> System.out.println(item.message()));
+      System.out.println();
+      System.out.print(menu.question());
+      String input = readLine();
+
+      CmdMenuItem selectedItem = menu.findItemForInput(input);
+      if (selectedItem != null) {
+        return input;
+      }
+
+      printError("Invalid option: " + input);
+
+      currentTries++;
+    }
+
+    printError("Too many retries. Giving up...");
+
+    return "";
+  }
+
   public void close() {
     try {
       reader.close();
