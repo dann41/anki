@@ -4,6 +4,7 @@ import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.Card
 import com.dann41.anki.core.deck.application.alldecksfinder.DeckSummary;
 import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -132,7 +133,7 @@ public class ConsoleView implements View {
         decks.stream().map(
             deck -> CmdMenuItem.of(
                 deck.id() + " - " + deck.numberOfQuestions() + " questions. Last played on " +
-                    deck.lastSession().toString(),
+                    Optional.ofNullable(deck.lastSession()).map(LocalDate::toString).orElse("never"),
                 deck.id()
             )
         ).collect(Collectors.toList()),

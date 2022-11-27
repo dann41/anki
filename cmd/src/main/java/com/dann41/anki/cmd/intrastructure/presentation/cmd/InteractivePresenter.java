@@ -95,48 +95,39 @@ public class InteractivePresenter implements Presenter {
 
   @Override
   public void playDeck(String deckId) {
-    this.viewContext.playDeck(deckId);
-    startSession();
+    startSession(deckId);
     displayState();
     displayNextCard();
   }
 
   @Override
   public void createDeck(String collectionId) {
-    this.viewContext.selectCollection(collectionId);
-    this.viewContext.playDeck(UUID.randomUUID().toString());
-    startSession();
+    String deckId = UUID.randomUUID().toString();
+
+    var deckCreator = appContext.getBean(DeckCreator.class);
+    try {
+      deckCreator.execute(
+          new CreateDeckCommand(
+              deckId,
+              viewContext.userId(),
+              collectionId
+          )
+      );
+      view.displayMainMenu();
+    } catch (CollectionNotFoundException exception) {
+      view.displayError("Cannot find collection for id " + viewContext.selectedCollectionId());
+      view.displayMainMenu();
+    }
   }
 
-  private void startSession() {
+  private void startSession(String deckId) {
     var sessionStarter = appContext.getBean(SessionStarter.class);
     try {
-      sessionStarter.execute(new StartSessionCommand(viewContext.currentDeckId(), viewContext.userId()));
+      sessionStarter.execute(new StartSessionCommand(deckId, viewContext.userId()));
+      viewContext.playDeck(deckId);
     } catch (DeckNotFoundException e) {
-      if (!viewContext.hasCollectionSelected()) {
-        view.displayError("You must specify a collection");
-        view.displayMainMenu();
-        return;
-      }
-
-      var deckCreator = appContext.getBean(DeckCreator.class);
-      try {
-        deckCreator.execute(new CreateDeckCommand(
-            viewContext.currentDeckId(),
-            viewContext.userId(),
-            viewContext.selectedCollectionId()));
-
-        sessionStarter.execute(new StartSessionCommand(
-            viewContext.currentDeckId(),
-            viewContext.userId()
-        ));
-
-        view.displayMessage("Deck created with id " + viewContext.currentDeckId());
-        view.displayMainMenu();
-      } catch (CollectionNotFoundException exception) {
-        view.displayError("Cannot find collection for id " + viewContext.selectedCollectionId());
-        view.displayMainMenu();
-      }
+      view.displayError("Cannot find deck for id " + deckId);
+      view.displayMainMenu();
     }
   }
 
@@ -171,6 +162,7 @@ public class InteractivePresenter implements Presenter {
     } else {
       view.displayFarewell();
     }
+    view.displayMainMenu();
   }
 
   private CardResponse getNextCard() {
