@@ -36,17 +36,6 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
   }
 
   @Override
-  public void displaySignUp() {
-    System.out.println("--- REGISTER ---");
-    System.out.print("Username: ");
-    String username = cmdTools.readLine();
-    System.out.print("Password: ");
-    String password = cmdTools.readLine();
-
-    presenter.register(username, password);
-  }
-
-  @Override
   public void displayMainMenu() {
     var menu = new CmdMenu(
         "--- ANKI Menu ---",
@@ -74,11 +63,6 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
     System.out.println("Name of the collection: ");
     String collectionName = cmdTools.readLine();
     presenter.createCollection(resourceName, collectionName);
-  }
-
-  @Override
-  public void displayLoginSucceed() {
-    cmdTools.printInfo("Login succeed");
   }
 
   @Override

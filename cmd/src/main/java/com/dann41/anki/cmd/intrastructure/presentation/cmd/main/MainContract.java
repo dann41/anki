@@ -13,8 +13,6 @@ public interface MainContract {
 
     void displayMessage(String message);
 
-    void displaySignUp();
-
     void displayMainMenu();
 
     void displayDecks(List<DeckSummary> decks);
@@ -33,11 +31,9 @@ public interface MainContract {
 
     void displayComeBackLater();
 
-    void displayLoginSucceed();
   }
 
   interface Presenter extends Core.Presenter<View> {
-    void register(String username, String password);
 
     void playDeck(String deckId);
 
