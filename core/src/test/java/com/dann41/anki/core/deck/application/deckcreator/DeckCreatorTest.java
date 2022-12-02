@@ -79,7 +79,7 @@ public class DeckCreatorTest {
 
   private void givenExistingDeck() {
     given(deckRepository.findById(DECK_ID))
-        .willReturn(Deck.create(DECK_ID.value(), USER_ID.value(), Collections.emptyList()));
+        .willReturn(Deck.create(DECK_ID.value(), USER_ID.value(), COLLECTION_ID, Collections.emptyList()));
   }
 
   private void verifyDeckSavedWithCatalog() {

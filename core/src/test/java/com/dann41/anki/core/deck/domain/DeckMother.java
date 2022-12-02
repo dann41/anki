@@ -11,10 +11,13 @@ public class DeckMother {
 
   public static final String USER_ID = "blabla";
 
+  public static final String COLLECTION_ID = "arts";
+
   public static Deck defaultDeck() {
     return Deck.restore(
         DECK_ID,
         USER_ID,
+        COLLECTION_ID,
         questions(),
         Collections.singletonList("A"),
         Arrays.asList("B", "C"),
@@ -29,6 +32,7 @@ public class DeckMother {
     return Deck.restore(
         DECK_ID,
         USER_ID,
+        COLLECTION_ID,
         questions(),
         Collections.emptyList(),
         Arrays.asList("A", "B", "C"),
@@ -43,6 +47,7 @@ public class DeckMother {
     return Deck.restore(
         DECK_ID,
         USER_ID,
+        COLLECTION_ID,
         questions(),
         Collections.emptyList(),
         Collections.emptyList(),
@@ -57,6 +62,7 @@ public class DeckMother {
     return Deck.restore(
         DECK_ID,
         USER_ID,
+        COLLECTION_ID,
         questions(),
         Collections.singletonList("A"),
         Collections.singletonList("B"),
