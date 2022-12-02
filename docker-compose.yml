@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: dbpass
-      POSTGRES_USER: dbuse r
+      POSTGRES_USER: dbuser
       POSTGRES_DB: anki
     ports:
       - "5432:5432"
