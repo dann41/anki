@@ -1,5 +1,11 @@
-package com.dann41.anki.cmd.intrastructure.presentation.cmd;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd.main;
 
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenu;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.CardCollectionSummary;
 import com.dann41.anki.core.deck.application.alldecksfinder.DeckSummary;
 import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
@@ -10,53 +16,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ConsoleView implements View {
+public class ConsoleView extends Core.BaseView implements MainContract.View {
 
   public static final String LIST_DECKS = "1";
   public static final String LIST_COLLECTIONS = "2";
   public static final String IMPORT_COLLECTIONS = "3";
-  private final Presenter presenter;
+  private final MainContract.Presenter presenter;
   private final CmdTools cmdTools;
 
-  public ConsoleView(Presenter presenter) {
+  public ConsoleView(Navigator navigator, MainContract.Presenter presenter) {
+    super(navigator);
     this.presenter = presenter;
     cmdTools = new CmdTools();
   }
 
   @Override
   public void show() {
-    presenter.onViewShown(this);
-  }
-
-  public void hide() {
-    cmdTools.close();
-  }
-
-  @Override
-  public void displayWelcome() {
-    System.out.println("""
-        Welcome to ANKI 2.0
-        The best tool to study stuff
-        """);
-  }
-
-  @Override
-  public void displayAuthenticationDialog() {
-    var authMenu = new CmdMenu(
-        "In order to play Anki you need to login",
-        List.of(
-            CmdMenuItem.of(" 1. Create a new user", "1"),
-            CmdMenuItem.of(" 2. Login existing user", "2")
-        ),
-        "Choose an option: "
-    );
-
-    String action = cmdTools.printMenu(authMenu);
-
-    switch (action) {
-      case "1" -> displaySignUp();
-      case "2" -> displayLogin();
-    }
+    configurePresenter(presenter);
   }
 
   @Override

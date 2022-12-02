@@ -5,10 +5,12 @@ import com.dann41.anki.cmd.intrastructure.services.Starter;
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardCollectionsImporter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 @Configuration
+@ComponentScan(basePackages = "com.dann41.anki.cmd.intrastructure.presentation")
 public class CmdConfiguration {
 
   @Lazy

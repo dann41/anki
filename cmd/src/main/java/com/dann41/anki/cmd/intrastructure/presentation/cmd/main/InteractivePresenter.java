@@ -1,5 +1,8 @@
-package com.dann41.anki.cmd.intrastructure.presentation.cmd;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd.main;
 
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
@@ -27,16 +30,15 @@ import com.dann41.anki.core.user.application.userregistrerer.UserRegistrerer;
 import com.dann41.anki.core.user.domain.UserNotFoundException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public class InteractivePresenter implements Presenter {
-  private final ApplicationContext appContext;
-  private final ViewContext viewContext = new ViewContext();
-  private View view;
+@Service
+public class InteractivePresenter implements MainContract.Presenter {
   private static final Map<String, String> BOX_MAPPER = new HashMap<>();
 
   static {
@@ -44,6 +46,10 @@ public class InteractivePresenter implements Presenter {
     BOX_MAPPER.put("o", "orange");
     BOX_MAPPER.put("r", "red");
   }
+  private final ApplicationContext appContext;
+  private final ViewContext viewContext = new ViewContext();
+  private MainContract.View view;
+  private Navigator navigator;
 
   public InteractivePresenter(ApplicationContext appContext) {
     // TODO inject use cases instead of AppContext
@@ -51,14 +57,13 @@ public class InteractivePresenter implements Presenter {
   }
 
   @Override
-  public void onViewShown(View view) {
+  public void onAttachView(MainContract.View view) {
     this.view = view;
-    onStart();
   }
 
-  public void onStart() {
-    view.displayWelcome();
-    view.displayAuthenticationDialog();
+  @Override
+  public void setNavigator(Navigator navigator) {
+    this.navigator = navigator;
   }
 
   @Override
@@ -71,7 +76,7 @@ public class InteractivePresenter implements Presenter {
       view.displayLogin();
     } catch (Exception e) {
       view.displayError(e.getMessage());
-      view.displayAuthenticationDialog();
+      navigator.openAuthenticationMenu();
     }
   }
 
@@ -89,7 +94,7 @@ public class InteractivePresenter implements Presenter {
       view.displayMainMenu();
     } catch (UserNotFoundException e) {
       view.displayError("Invalid login. The user does not exist or the password is invalid");
-      view.displayAuthenticationDialog();
+      navigator.openAuthenticationMenu();
     }
   }
 

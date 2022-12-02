@@ -1,9 +1,12 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+@Service
 public class CmdTools {
 
   public static final String ANSI_RESET = "\u001B[0m";
