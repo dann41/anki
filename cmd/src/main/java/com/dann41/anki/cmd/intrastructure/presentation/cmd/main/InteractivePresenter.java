@@ -1,8 +1,8 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.main;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
@@ -21,13 +21,8 @@ import com.dann41.anki.core.deck.application.statefinder.StateFinder;
 import com.dann41.anki.core.deck.application.statefinder.StateFinderQuery;
 import com.dann41.anki.core.deck.application.statefinder.StateResponse;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
-import com.dann41.anki.core.user.application.authenticator.UserAuthenticator;
-import com.dann41.anki.core.user.application.authenticator.UserAuthenticatorCommand;
-import com.dann41.anki.core.user.application.userfinder.UserFinder;
-import com.dann41.anki.core.user.application.userfinder.UserResponse;
 import com.dann41.anki.core.user.application.userregistrerer.RegisterUserCommand;
 import com.dann41.anki.core.user.application.userregistrerer.UserRegistrerer;
-import com.dann41.anki.core.user.domain.UserNotFoundException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -73,27 +68,9 @@ public class InteractivePresenter implements MainContract.Presenter {
     try {
       registrerer.execute(new RegisterUserCommand(username, hasher.encode(password)));
       view.displayMessage("User created. You can proceed to login");
-      view.displayLogin();
+      navigator.openAuthenticationMenu();
     } catch (Exception e) {
       view.displayError(e.getMessage());
-      navigator.openAuthenticationMenu();
-    }
-  }
-
-  @Override
-  public void login(String username, String password) {
-    UserAuthenticator authenticator = appContext.getBean(UserAuthenticator.class);
-    try {
-      authenticator.execute(new UserAuthenticatorCommand(username, password));
-
-      UserFinder userFinder = appContext.getBean(UserFinder.class);
-      UserResponse user = userFinder.execute(username);
-      this.viewContext.login(user.id(), user.username());
-
-      view.displayLoginSucceed();
-      view.displayMainMenu();
-    } catch (UserNotFoundException e) {
-      view.displayError("Invalid login. The user does not exist or the password is invalid");
       navigator.openAuthenticationMenu();
     }
   }

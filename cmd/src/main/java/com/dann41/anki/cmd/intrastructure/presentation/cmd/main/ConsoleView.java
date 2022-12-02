@@ -36,17 +36,6 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
   }
 
   @Override
-  public void displayLogin() {
-    System.out.println("--- LOGIN ---");
-    System.out.print("Username: ");
-    String username = cmdTools.readLine();
-    System.out.print("Password: ");
-    String password = cmdTools.readLine();
-
-    presenter.login(username, password);
-  }
-
-  @Override
   public void displaySignUp() {
     System.out.println("--- REGISTER ---");
     System.out.print("Username: ");

@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface MainContract {
   interface View extends Core.View {
-    void displayLogin();
 
     void displayMessage(String message);
 
@@ -39,8 +38,6 @@ public interface MainContract {
 
   interface Presenter extends Core.Presenter<View> {
     void register(String username, String password);
-
-    void login(String user, String password);
 
     void playDeck(String deckId);
 
