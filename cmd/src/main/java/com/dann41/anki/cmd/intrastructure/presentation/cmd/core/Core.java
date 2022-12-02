@@ -9,7 +9,7 @@ public interface Core {
   }
 
   abstract class BaseView implements View {
-    private Navigator navigator;
+    protected final Navigator navigator;
 
     protected BaseView(Navigator navigator) {
       this.navigator = navigator;

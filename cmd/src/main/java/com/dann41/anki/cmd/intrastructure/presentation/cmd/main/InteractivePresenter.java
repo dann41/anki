@@ -22,7 +22,7 @@ import com.dann41.anki.core.deck.application.statefinder.StateFinderQuery;
 import com.dann41.anki.core.deck.application.statefinder.StateResponse;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
 import com.dann41.anki.core.user.application.userregistrerer.RegisterUserCommand;
-import com.dann41.anki.core.user.application.userregistrerer.UserRegistrerer;
+import com.dann41.anki.core.user.application.userregistrerer.UserRegisterer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,7 +63,7 @@ public class InteractivePresenter implements MainContract.Presenter {
 
   @Override
   public void register(String username, String password) {
-    var registrerer = appContext.getBean(UserRegistrerer.class);
+    var registrerer = appContext.getBean(UserRegisterer.class);
     var hasher = appContext.getBean(PasswordEncoder.class);
     try {
       registrerer.execute(new RegisterUserCommand(username, hasher.encode(password)));

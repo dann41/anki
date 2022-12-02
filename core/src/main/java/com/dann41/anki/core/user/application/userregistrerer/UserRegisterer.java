@@ -8,11 +8,11 @@ import com.dann41.anki.core.user.domain.Username;
 
 import java.util.UUID;
 
-public class UserRegistrerer {
+public class UserRegisterer {
 
   private final UserRepository userRepository;
 
-  public UserRegistrerer(UserRepository userRepository) {
+  public UserRegisterer(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 

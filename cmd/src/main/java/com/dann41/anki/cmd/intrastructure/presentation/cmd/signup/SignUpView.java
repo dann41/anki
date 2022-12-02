@@ -1,4 +1,4 @@
-package com.dann41.anki.cmd.intrastructure.presentation.cmd.login;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd.signup;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.RetriesExhaustedException;
@@ -6,14 +6,13 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.Retryer;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 
-public class LoginView extends Core.BaseView implements LoginContract.View {
+public class SignUpView extends Core.BaseView implements SignUpContract.View {
   private static final int MAX_TRIES = 3;
-  private final LoginContract.Presenter presenter;
+  private final SignUpContract.Presenter presenter;
   private final CmdTools cmdTools;
   private final Retryer retryer;
 
-
-  public LoginView(Navigator navigator, LoginContract.Presenter presenter, CmdTools cmdTools) {
+  public SignUpView(Navigator navigator, SignUpContract.Presenter presenter, CmdTools cmdTools) {
     super(navigator);
     this.presenter = presenter;
     this.cmdTools = cmdTools;
@@ -23,11 +22,12 @@ public class LoginView extends Core.BaseView implements LoginContract.View {
   @Override
   public void show() {
     configurePresenter(presenter);
-    System.out.println("--- LOGIN ---");
-    requestLoginCredentials();
+
+    System.out.println("--- REGISTER ---");
+    displaySignUp();
   }
 
-  private void requestLoginCredentials() {
+  private void displaySignUp() {
     try {
       retryer.retry(() -> {
         System.out.print("Username: ");
@@ -35,7 +35,7 @@ public class LoginView extends Core.BaseView implements LoginContract.View {
         System.out.print("Password: ");
         String password = cmdTools.readLine();
 
-        presenter.onLoginSubmit(username, password);
+        presenter.onSignupSubmit(username, password);
       });
     } catch (RetriesExhaustedException e) {
       cmdTools.printError("Too may tries... back to auth menu");
@@ -44,13 +44,13 @@ public class LoginView extends Core.BaseView implements LoginContract.View {
   }
 
   @Override
-  public void showLoginSucceed() {
-    cmdTools.printInfo("Login succeed");
+  public void showSignupSucceed() {
+    cmdTools.printInfo("User created");
   }
 
   @Override
-  public void showLoginFailed() {
-    cmdTools.printError("Invalid login. The user does not exist or the password is invalid");
-    requestLoginCredentials();
+  public void showSignupFailed() {
+    cmdTools.printError("Cannot create user");
+    displaySignUp();
   }
 }

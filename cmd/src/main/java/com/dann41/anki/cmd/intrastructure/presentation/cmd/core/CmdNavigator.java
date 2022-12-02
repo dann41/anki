@@ -7,6 +7,8 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.login.LoginContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.login.LoginView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.main.ConsoleView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.main.MainContract;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.signup.SignUpContract;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.signup.SignUpView;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -19,15 +21,18 @@ public class CmdNavigator implements Navigator {
   private final MainContract.Presenter mainPresenter;
   private final MainContract.View mainView;
   private final LoginContract.Presenter loginPresenter;
+  private final SignUpContract.Presenter signUpPresenter;
 
   public CmdNavigator(CmdTools cmdTools,
                       AuthenticationContract.Presenter authenticationPresenter,
                       MainContract.Presenter mainPresenter,
-                      LoginContract.Presenter loginPresenter) {
+                      LoginContract.Presenter loginPresenter,
+                      SignUpContract.Presenter signUpPresenter) {
     this.cmdTools = cmdTools;
     this.authenticationPresenter = authenticationPresenter;
     this.mainPresenter = mainPresenter;
     this.loginPresenter = loginPresenter;
+    this.signUpPresenter = signUpPresenter;
 
     this.mainView = new ConsoleView(this, mainPresenter);
   }
@@ -39,14 +44,14 @@ public class CmdNavigator implements Navigator {
 
   @Override
   public void openLoginScreen() {
-    var loginView = new LoginView(this, loginPresenter, cmdTools);
-    loginView.show();
+    var view = new LoginView(this, loginPresenter, cmdTools);
+    view.show();
   }
 
   @Override
   public void openSignUpScreen() {
-    mainView.show();
-    mainView.displaySignUp();
+    var view = new SignUpView(this, signUpPresenter, cmdTools);
+    view.show();
   }
 
   @Override
