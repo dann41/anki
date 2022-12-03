@@ -1,7 +1,5 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.core;
 
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
-
 public interface Core {
 
   interface View {
@@ -18,6 +16,10 @@ public interface Core {
     protected <T extends View> void configurePresenter(Presenter<T> presenter) {
         presenter.onAttachView((T) this);
         presenter.setNavigator(navigator);
+    }
+
+    protected void goBack() {
+      navigator.back();
     }
   }
 

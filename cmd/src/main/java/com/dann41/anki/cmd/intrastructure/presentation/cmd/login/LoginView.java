@@ -39,7 +39,7 @@ public class LoginView extends Core.BaseView implements LoginContract.View {
       });
     } catch (RetriesExhaustedException e) {
       cmdTools.printError("Too may tries... back to auth menu");
-      navigator.openAuthenticationMenu();
+      goBack();
     }
   }
 

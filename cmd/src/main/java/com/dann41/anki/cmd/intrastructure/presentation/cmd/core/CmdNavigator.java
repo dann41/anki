@@ -12,6 +12,8 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.signup.SignUpView;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.EmptyStackException;
+import java.util.Stack;
 
 @Service
 public class CmdNavigator implements Navigator {
@@ -22,6 +24,9 @@ public class CmdNavigator implements Navigator {
   private final MainContract.View mainView;
   private final LoginContract.Presenter loginPresenter;
   private final SignUpContract.Presenter signUpPresenter;
+
+  private Core.View currentView;
+  private final Stack<Core.View> viewStack = new Stack<>();
 
   public CmdNavigator(CmdTools cmdTools,
                       AuthenticationContract.Presenter authenticationPresenter,
@@ -38,43 +43,62 @@ public class CmdNavigator implements Navigator {
   }
 
   @Override
+  public void back() {
+    try {
+      var view = viewStack.pop();
+      currentView = view;
+      view.show();
+    } catch (EmptyStackException e) {
+
+    }
+  }
+
+  @Override
   public void openAuthenticationMenu() {
-    new AuthenticationView(this, authenticationPresenter, cmdTools).show();
+    var view = new AuthenticationView(this, authenticationPresenter, cmdTools);
+    showView(view);
   }
 
   @Override
   public void openLoginScreen() {
     var view = new LoginView(this, loginPresenter, cmdTools);
-    view.show();
+    showView(view);
   }
 
   @Override
   public void openSignUpScreen() {
     var view = new SignUpView(this, signUpPresenter, cmdTools);
-    view.show();
+    showView(view);
   }
 
   @Override
   public void openUserMenuScreen(String userId) {
-    mainView.show();
+    showView(mainView);
     mainView.displayMainMenu();
   }
 
   @Override
   public void openDeckSelectionScreen(String userId) {
-    mainView.show();
+    showView(mainView);
     mainView.displayDecks(Collections.emptyList());
   }
 
   @Override
   public void openDeckCreationScreen(String userId) {
-    mainView.show();
+    showView(mainView);
     mainView.displayCollections(Collections.emptyList());
   }
 
   @Override
   public void openCollectionImportScreen(String userId) {
-    mainView.show();
-    // TODO
+    showView(mainView);
+  }
+
+  private void showView(Core.View view) {
+    if (currentView != null) {
+      viewStack.push(currentView);
+    }
+    currentView = view;
+    view.show();
   }
 }

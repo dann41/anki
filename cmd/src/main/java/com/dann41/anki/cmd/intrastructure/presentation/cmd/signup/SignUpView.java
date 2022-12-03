@@ -39,7 +39,7 @@ public class SignUpView extends Core.BaseView implements SignUpContract.View {
       });
     } catch (RetriesExhaustedException e) {
       cmdTools.printError("Too may tries... back to auth menu");
-      navigator.openAuthenticationMenu();
+      goBack();
     }
   }
 
