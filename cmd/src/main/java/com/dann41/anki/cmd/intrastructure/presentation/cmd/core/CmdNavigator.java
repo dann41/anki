@@ -3,6 +3,8 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.core;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.authentication.AuthenticationContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.authentication.AuthenticationView;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.collectionimport.CollectionImportContract;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.collectionimport.CollectionImportView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.login.LoginContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.login.LoginView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.main.ConsoleView;
@@ -13,7 +15,6 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.usermenu.UserMenuCont
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.usermenu.UserMenuView;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -27,6 +28,7 @@ public class CmdNavigator implements Navigator {
   private final LoginContract.Presenter loginPresenter;
   private final SignUpContract.Presenter signUpPresenter;
   private final UserMenuContract.Presenter userMenuPresenter;
+  private final CollectionImportContract.Presenter collectionImportPresenter;
 
   private Core.View currentView;
   private final Stack<Core.View> viewStack = new Stack<>();
@@ -36,13 +38,15 @@ public class CmdNavigator implements Navigator {
                       MainContract.Presenter mainPresenter,
                       LoginContract.Presenter loginPresenter,
                       SignUpContract.Presenter signUpPresenter,
-                      UserMenuContract.Presenter userMenuPresenter) {
+                      UserMenuContract.Presenter userMenuPresenter,
+                      CollectionImportContract.Presenter collectionImportPresenter) {
     this.cmdTools = cmdTools;
     this.authenticationPresenter = authenticationPresenter;
     this.mainPresenter = mainPresenter;
     this.loginPresenter = loginPresenter;
     this.signUpPresenter = signUpPresenter;
     this.userMenuPresenter = userMenuPresenter;
+    this.collectionImportPresenter = collectionImportPresenter;
 
     this.mainView = new ConsoleView(this, mainPresenter);
   }
@@ -96,7 +100,8 @@ public class CmdNavigator implements Navigator {
 
   @Override
   public void openCollectionImportScreen() {
-    showView(mainView);
+    var view = new CollectionImportView(this, collectionImportPresenter, cmdTools);
+    showView(view);
   }
 
   private void showView(Core.View view) {

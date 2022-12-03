@@ -4,7 +4,6 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
-import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinderQuery;
@@ -192,17 +191,4 @@ public class InteractivePresenter implements MainContract.Presenter {
     view.displayCollections(allCollectionsFinder.execute().collections());
   }
 
-  @Override
-  public void createCollection(String resourceName, String collectionName) {
-    var importer = appContext.getBean(FileCollectionImporter.class);
-    var collectionId = UUID.randomUUID().toString();
-    try {
-      importer.importCollection(resourceName, collectionId, collectionName);
-      view.displayMessage("Collection created with id " + collectionId);
-      navigator.back();
-    } catch (RuntimeException e) {
-      view.displayError("Cannot create collection. Reason: " + e.getMessage());
-      navigator.back();
-    }
-  }
 }

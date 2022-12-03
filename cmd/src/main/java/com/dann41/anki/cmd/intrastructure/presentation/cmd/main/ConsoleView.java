@@ -32,14 +32,6 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
     configurePresenter(presenter);
   }
 
-  private void displayCollectionImportDialog() {
-    System.out.println("Select file to import (e.g. core/src/main/resources/cards.tsv): ");
-    String resourceName = cmdTools.readLine();
-    System.out.println("Name of the collection: ");
-    String collectionName = cmdTools.readLine();
-    presenter.createCollection(resourceName, collectionName);
-  }
-
   @Override
   public void displayMessage(String message) {
     cmdTools.printInfo(message);

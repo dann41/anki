@@ -45,6 +45,5 @@ public interface MainContract {
 
     void loadCollections();
 
-    void createCollection(String resourceName, String collectionName);
   }
 }
