@@ -9,6 +9,8 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.main.ConsoleView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.main.MainContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.signup.SignUpContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.signup.SignUpView;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.usermenu.UserMenuContract;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.usermenu.UserMenuView;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,6 +26,7 @@ public class CmdNavigator implements Navigator {
   private final MainContract.View mainView;
   private final LoginContract.Presenter loginPresenter;
   private final SignUpContract.Presenter signUpPresenter;
+  private final UserMenuContract.Presenter userMenuPresenter;
 
   private Core.View currentView;
   private final Stack<Core.View> viewStack = new Stack<>();
@@ -32,12 +35,14 @@ public class CmdNavigator implements Navigator {
                       AuthenticationContract.Presenter authenticationPresenter,
                       MainContract.Presenter mainPresenter,
                       LoginContract.Presenter loginPresenter,
-                      SignUpContract.Presenter signUpPresenter) {
+                      SignUpContract.Presenter signUpPresenter,
+                      UserMenuContract.Presenter userMenuPresenter) {
     this.cmdTools = cmdTools;
     this.authenticationPresenter = authenticationPresenter;
     this.mainPresenter = mainPresenter;
     this.loginPresenter = loginPresenter;
     this.signUpPresenter = signUpPresenter;
+    this.userMenuPresenter = userMenuPresenter;
 
     this.mainView = new ConsoleView(this, mainPresenter);
   }
@@ -72,25 +77,25 @@ public class CmdNavigator implements Navigator {
   }
 
   @Override
-  public void openUserMenuScreen(String userId) {
-    showView(mainView);
-    mainView.displayMainMenu();
+  public void openUserMenuScreen() {
+    var view = new UserMenuView(this, userMenuPresenter, cmdTools);
+    showView(view);
   }
 
   @Override
-  public void openDeckSelectionScreen(String userId) {
+  public void openDeckSelectionScreen() {
     showView(mainView);
-    mainView.displayDecks(Collections.emptyList());
+    mainView.showDeckSelection();
   }
 
   @Override
-  public void openDeckCreationScreen(String userId) {
+  public void openDeckCreationScreen() {
     showView(mainView);
-    mainView.displayCollections(Collections.emptyList());
+    mainView.showCollections();
   }
 
   @Override
-  public void openCollectionImportScreen(String userId) {
+  public void openCollectionImportScreen() {
     showView(mainView);
   }
 

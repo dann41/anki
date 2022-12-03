@@ -18,9 +18,6 @@ import java.util.stream.Collectors;
 
 public class ConsoleView extends Core.BaseView implements MainContract.View {
 
-  public static final String LIST_DECKS = "1";
-  public static final String LIST_COLLECTIONS = "2";
-  public static final String IMPORT_COLLECTIONS = "3";
   private final MainContract.Presenter presenter;
   private final CmdTools cmdTools;
 
@@ -33,28 +30,6 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
   @Override
   public void show() {
     configurePresenter(presenter);
-  }
-
-  @Override
-  public void displayMainMenu() {
-    var menu = new CmdMenu(
-        "--- ANKI Menu ---",
-        List.of(
-            CmdMenuItem.of(" 1. Play an existing deck", "1"),
-            CmdMenuItem.of(" 2. Create a new deck", "2"),
-            CmdMenuItem.of(" 3. Import collection from file", "3")
-        ),
-        "Choose an option: "
-    );
-
-    String option = cmdTools.printMenu(menu);
-
-    switch (option) {
-      case LIST_DECKS -> presenter.loadDecks();
-      case LIST_COLLECTIONS -> presenter.loadCollections();
-      case IMPORT_COLLECTIONS -> displayCollectionImportDialog();
-      default -> displayMainMenu();
-    }
   }
 
   private void displayCollectionImportDialog() {
@@ -71,10 +46,15 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
   }
 
   @Override
+  public void showDeckSelection() {
+    presenter.loadDecks();
+  }
+
+  @Override
   public void displayDecks(List<DeckSummary> decks) {
     if (decks.isEmpty()) {
       cmdTools.printInfo("No decks found. Please create one");
-      displayMainMenu();
+      goBack();
     }
 
     var deckSelector = new CmdMenu(
@@ -93,7 +73,7 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
 
     if (deckId.isEmpty()) {
       System.out.println("No deck selected. Back to main menu");
-      displayMainMenu();
+      goBack();
       return;
     }
 
@@ -114,6 +94,11 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
   }
 
   @Override
+  public void showCollections() {
+    presenter.loadCollections();
+  }
+
+  @Override
   public void displayCollections(List<CardCollectionSummary> collections) {
     var collectionSelector = new CmdMenu(
         "--- Collections ---",
@@ -128,7 +113,7 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
 
     String collectionId = cmdTools.printMenu(collectionSelector);
     if (collectionId.isEmpty()) {
-      displayMainMenu();
+      goBack();
       return;
     }
 

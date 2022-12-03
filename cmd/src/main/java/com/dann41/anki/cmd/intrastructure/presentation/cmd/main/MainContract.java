@@ -12,10 +12,11 @@ public interface MainContract {
   interface View extends Core.View {
 
     void displayMessage(String message);
-
-    void displayMainMenu();
+    void showDeckSelection();
 
     void displayDecks(List<DeckSummary> decks);
+
+    void showCollections();
 
     void displayCollections(List<CardCollectionSummary> collection);
 
@@ -30,7 +31,6 @@ public interface MainContract {
     void displayFarewell();
 
     void displayComeBackLater();
-
   }
 
   interface Presenter extends Core.Presenter<View> {

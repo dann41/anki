@@ -3,6 +3,7 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.main;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
 import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
@@ -38,14 +39,26 @@ public class InteractivePresenter implements MainContract.Presenter {
     BOX_MAPPER.put("o", "orange");
     BOX_MAPPER.put("r", "red");
   }
+
   private final ApplicationContext appContext;
   private final ViewContext viewContext = new ViewContext();
+  private final SessionInteractor sessionInteractor;
   private MainContract.View view;
   private Navigator navigator;
 
-  public InteractivePresenter(ApplicationContext appContext) {
+  public InteractivePresenter(ApplicationContext appContext, SessionInteractor sessionInteractor) {
     // TODO inject use cases instead of AppContext
     this.appContext = appContext;
+    this.sessionInteractor = sessionInteractor;
+
+    loadViewContext(sessionInteractor);
+  }
+
+  private void loadViewContext(SessionInteractor sessionInteractor) {
+    var session = sessionInteractor.currentSession();
+    if (session != null) {
+      viewContext.login(session.userId(), session.username());
+    }
   }
 
   @Override
@@ -78,10 +91,11 @@ public class InteractivePresenter implements MainContract.Presenter {
               collectionId
           )
       );
-      view.displayMainMenu();
+
+      navigator.openUserMenuScreen();
     } catch (CollectionNotFoundException exception) {
       view.displayError("Cannot find collection for id " + collectionId);
-      view.displayMainMenu();
+      navigator.back();
     }
   }
 
@@ -92,7 +106,7 @@ public class InteractivePresenter implements MainContract.Presenter {
       viewContext.playDeck(deckId);
     } catch (DeckNotFoundException e) {
       view.displayError("Cannot find deck for id " + deckId);
-      view.displayMainMenu();
+      navigator.back();
     }
   }
 
@@ -127,7 +141,8 @@ public class InteractivePresenter implements MainContract.Presenter {
     } else {
       view.displayFarewell();
     }
-    view.displayMainMenu();
+
+    navigator.back();
   }
 
   private CardResponse getNextCard() {
@@ -163,12 +178,16 @@ public class InteractivePresenter implements MainContract.Presenter {
 
   @Override
   public void loadDecks() {
+    loadViewContext(sessionInteractor);
+
     MyDecksFinder myDecksFinder = appContext.getBean(MyDecksFinder.class);
     view.displayDecks(myDecksFinder.execute(new MyDecksFinderQuery(viewContext.userId())).decks());
   }
 
   @Override
   public void loadCollections() {
+    loadViewContext(sessionInteractor);
+
     var allCollectionsFinder = appContext.getBean(AllCollectionsFinder.class);
     view.displayCollections(allCollectionsFinder.execute().collections());
   }
@@ -180,10 +199,10 @@ public class InteractivePresenter implements MainContract.Presenter {
     try {
       importer.importCollection(resourceName, collectionId, collectionName);
       view.displayMessage("Collection created with id " + collectionId);
-      view.displayMainMenu();
+      navigator.back();
     } catch (RuntimeException e) {
       view.displayError("Cannot create collection. Reason: " + e.getMessage());
-      view.displayMainMenu();
+      navigator.back();
     }
   }
 }
