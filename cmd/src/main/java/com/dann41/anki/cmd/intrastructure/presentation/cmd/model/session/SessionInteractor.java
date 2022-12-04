@@ -13,6 +13,7 @@ public class SessionInteractor {
   private final UserFinder userFinder;
 
   private Session session;
+  private String deckId;
 
   public SessionInteractor(UserAuthenticator userAuthenticator, UserFinder userFinder) {
     this.userAuthenticator = userAuthenticator;
@@ -34,5 +35,17 @@ public class SessionInteractor {
 
   public void logout() {
     session = null;
+  }
+
+  public void selectDeck(String deckId) {
+    this.deckId = deckId;
+  }
+
+  public void endDeck() {
+    this.deckId = null;
+  }
+
+  public String deckSelected() {
+    return deckId;
   }
 }

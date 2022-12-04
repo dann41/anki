@@ -5,6 +5,8 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.authentication.Authen
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.authentication.AuthenticationView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.collectionimport.CollectionImportContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.collectionimport.CollectionImportView;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.deckselection.DeckSelectionContract;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.deckselection.DeckSelectionView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.login.LoginContract;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.login.LoginView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.main.ConsoleView;
@@ -29,6 +31,7 @@ public class CmdNavigator implements Navigator {
   private final SignUpContract.Presenter signUpPresenter;
   private final UserMenuContract.Presenter userMenuPresenter;
   private final CollectionImportContract.Presenter collectionImportPresenter;
+  private final DeckSelectionContract.Presenter deckSelectionPresenter;
 
   private Core.View currentView;
   private final Stack<Core.View> viewStack = new Stack<>();
@@ -39,7 +42,8 @@ public class CmdNavigator implements Navigator {
                       LoginContract.Presenter loginPresenter,
                       SignUpContract.Presenter signUpPresenter,
                       UserMenuContract.Presenter userMenuPresenter,
-                      CollectionImportContract.Presenter collectionImportPresenter) {
+                      CollectionImportContract.Presenter collectionImportPresenter,
+                      DeckSelectionContract.Presenter deckSelectionPresenter) {
     this.cmdTools = cmdTools;
     this.authenticationPresenter = authenticationPresenter;
     this.mainPresenter = mainPresenter;
@@ -47,6 +51,7 @@ public class CmdNavigator implements Navigator {
     this.signUpPresenter = signUpPresenter;
     this.userMenuPresenter = userMenuPresenter;
     this.collectionImportPresenter = collectionImportPresenter;
+    this.deckSelectionPresenter = deckSelectionPresenter;
 
     this.mainView = new ConsoleView(this, mainPresenter);
   }
@@ -88,8 +93,8 @@ public class CmdNavigator implements Navigator {
 
   @Override
   public void openDeckSelectionScreen() {
-    showView(mainView);
-    mainView.showDeckSelection();
+    var view = new DeckSelectionView(this, deckSelectionPresenter, cmdTools);
+    showView(view);
   }
 
   @Override
@@ -102,6 +107,12 @@ public class CmdNavigator implements Navigator {
   public void openCollectionImportScreen() {
     var view = new CollectionImportView(this, collectionImportPresenter, cmdTools);
     showView(view);
+  }
+
+  @Override
+  public void openDeckPlayerScreen() {
+    showView(mainView);
+    mainView.playDeck();
   }
 
   private void showView(Core.View view) {

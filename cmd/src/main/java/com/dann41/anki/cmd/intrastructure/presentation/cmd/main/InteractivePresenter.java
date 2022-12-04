@@ -5,8 +5,6 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
-import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
-import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinderQuery;
 import com.dann41.anki.core.deck.application.cardpicker.CardPicker;
 import com.dann41.anki.core.deck.application.cardpicker.CardPickerQuery;
 import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
@@ -50,14 +48,17 @@ public class InteractivePresenter implements MainContract.Presenter {
     this.appContext = appContext;
     this.sessionInteractor = sessionInteractor;
 
-    loadViewContext(sessionInteractor);
+    loadViewContext();
   }
 
-  private void loadViewContext(SessionInteractor sessionInteractor) {
+  private void loadViewContext() {
     var session = sessionInteractor.currentSession();
     if (session != null) {
       viewContext.login(session.userId(), session.username());
     }
+
+    var deckId = sessionInteractor.deckSelected();
+    viewContext.playDeck(deckId);
   }
 
   @Override
@@ -71,14 +72,18 @@ public class InteractivePresenter implements MainContract.Presenter {
   }
 
   @Override
-  public void playDeck(String deckId) {
-    startSession(deckId);
+  public void playDeck() {
+    loadViewContext();
+
+    startSession();
     displayState();
     displayNextCard();
   }
 
   @Override
   public void createDeck(String collectionId) {
+    loadViewContext();
+
     String deckId = UUID.randomUUID().toString();
 
     var deckCreator = appContext.getBean(DeckCreator.class);
@@ -98,7 +103,8 @@ public class InteractivePresenter implements MainContract.Presenter {
     }
   }
 
-  private void startSession(String deckId) {
+  private void startSession() {
+    var deckId = viewContext.currentDeckId();
     var sessionStarter = appContext.getBean(SessionStarter.class);
     try {
       sessionStarter.execute(new StartSessionCommand(deckId, viewContext.userId()));
@@ -162,6 +168,8 @@ public class InteractivePresenter implements MainContract.Presenter {
 
   @Override
   public void solveCard(String cardId, String box) {
+    loadViewContext();
+
     String boxName = BOX_MAPPER.get(box.toLowerCase(Locale.getDefault()));
     if (boxName == null) {
       view.displayError("Unknown box name " + box);
@@ -176,16 +184,8 @@ public class InteractivePresenter implements MainContract.Presenter {
   }
 
   @Override
-  public void loadDecks() {
-    loadViewContext(sessionInteractor);
-
-    MyDecksFinder myDecksFinder = appContext.getBean(MyDecksFinder.class);
-    view.displayDecks(myDecksFinder.execute(new MyDecksFinderQuery(viewContext.userId())).decks());
-  }
-
-  @Override
   public void loadCollections() {
-    loadViewContext(sessionInteractor);
+    loadViewContext();
 
     var allCollectionsFinder = appContext.getBean(AllCollectionsFinder.class);
     view.displayCollections(allCollectionsFinder.execute().collections());

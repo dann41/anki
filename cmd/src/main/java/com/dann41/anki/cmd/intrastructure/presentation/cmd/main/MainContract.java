@@ -11,11 +11,6 @@ import java.util.List;
 public interface MainContract {
   interface View extends Core.View {
 
-    void displayMessage(String message);
-    void showDeckSelection();
-
-    void displayDecks(List<DeckSummary> decks);
-
     void showCollections();
 
     void displayCollections(List<CardCollectionSummary> collection);
@@ -31,17 +26,17 @@ public interface MainContract {
     void displayFarewell();
 
     void displayComeBackLater();
+
+    void playDeck();
   }
 
   interface Presenter extends Core.Presenter<View> {
 
-    void playDeck(String deckId);
+    void playDeck();
 
     void createDeck(String collectionId);
 
     void solveCard(String cardId, String box);
-
-    void loadDecks();
 
     void loadCollections();
 

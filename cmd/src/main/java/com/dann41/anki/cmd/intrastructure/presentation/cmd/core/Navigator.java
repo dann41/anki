@@ -10,4 +10,5 @@ public interface Navigator {
   void openDeckSelectionScreen();
   void openDeckCreationScreen();
   void openCollectionImportScreen();
+  void openDeckPlayerScreen();
 }
