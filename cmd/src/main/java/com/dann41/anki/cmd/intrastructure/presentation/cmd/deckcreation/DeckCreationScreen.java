@@ -1,18 +1,18 @@
-package com.dann41.anki.cmd.intrastructure.presentation.cmd.main;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckcreation;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.CardCollectionSummary;
 
 import java.util.List;
 
-public interface MainContract {
+public interface DeckCreationScreen {
   interface View extends Core.View {
-
-    void showCollections();
 
     void displayCollections(List<CardCollectionSummary> collection);
 
     void displayError(String errorMessage);
+
+    void displayDeckCreated(String deckId);
 
   }
 

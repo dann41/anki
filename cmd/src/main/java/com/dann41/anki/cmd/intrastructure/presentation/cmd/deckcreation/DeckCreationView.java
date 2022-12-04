@@ -1,4 +1,4 @@
-package com.dann41.anki.cmd.intrastructure.presentation.cmd.main;
+package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckcreation;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenu;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
@@ -10,20 +10,21 @@ import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.Card
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConsoleView extends Core.BaseView implements MainContract.View {
+public class DeckCreationView extends Core.BaseView implements DeckCreationScreen.View {
 
-  private final MainContract.Presenter presenter;
+  private final DeckCreationScreen.Presenter presenter;
   private final CmdTools cmdTools;
 
-  public ConsoleView(Navigator navigator, MainContract.Presenter presenter) {
+  public DeckCreationView(Navigator navigator, DeckCreationScreen.Presenter presenter, CmdTools cmdTools) {
     super(navigator);
     this.presenter = presenter;
-    cmdTools = new CmdTools();
+    this.cmdTools = cmdTools;
   }
 
   @Override
   public void show() {
     configurePresenter(presenter);
+    presenter.loadCollections();
   }
 
   private String getCollectionString(CardCollectionSummary collection) {
@@ -37,11 +38,6 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
         collection.description(),
         collection.numberOfQuestions()
     );
-  }
-
-  @Override
-  public void showCollections() {
-    presenter.loadCollections();
   }
 
   @Override
@@ -70,6 +66,11 @@ public class ConsoleView extends Core.BaseView implements MainContract.View {
   @Override
   public void displayError(String errorMessage) {
     cmdTools.printError(errorMessage);
+  }
+
+  @Override
+  public void displayDeckCreated(String deckId) {
+    cmdTools.printInfo("Deck created with id " + deckId);
   }
 
 }
