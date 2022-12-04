@@ -46,8 +46,9 @@ public class CmdTools {
   }
 
   public String printMenuWithRetries(CmdMenu menu, int maxTries) {
-    int currentTries = 0;
-    while (currentTries < maxTries) {
+    var retryer = new Retryer(maxTries);
+
+    while (retryer.retry()) {
       System.out.println(menu.title());
       menu.items().forEach(item -> System.out.println(item.message()));
       System.out.println();
@@ -60,8 +61,6 @@ public class CmdTools {
       }
 
       printError("Invalid option: " + input);
-
-      currentTries++;
     }
 
     printError("Too many retries. Giving up...");
