@@ -3,14 +3,14 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckcreation;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenu;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.CardCollectionSummary;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DeckCreationView extends Core.BaseView implements DeckCreationScreen.View {
+public class DeckCreationView extends BaseView implements DeckCreationScreen.View {
 
   private final DeckCreationScreen.Presenter presenter;
   private final CmdTools cmdTools;

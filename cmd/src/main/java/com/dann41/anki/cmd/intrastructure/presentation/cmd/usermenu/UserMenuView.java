@@ -3,12 +3,12 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.usermenu;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenu;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 
 import java.util.List;
 
-public class UserMenuView extends Core.BaseView implements UserMenuContract.View {
+public class UserMenuView extends BaseView implements UserMenuContract.View {
 
   public static final String PLAY_DECK = "1";
   public static final String CREATE_DECK = "2";

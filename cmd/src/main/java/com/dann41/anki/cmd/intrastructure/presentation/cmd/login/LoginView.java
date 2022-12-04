@@ -3,10 +3,10 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.login;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.RetriesExhaustedException;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.Retryer;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 
-public class LoginView extends Core.BaseView implements LoginContract.View {
+public class LoginView extends BaseView implements LoginContract.View {
   private static final int MAX_TRIES = 3;
   private final LoginContract.Presenter presenter;
   private final CmdTools cmdTools;

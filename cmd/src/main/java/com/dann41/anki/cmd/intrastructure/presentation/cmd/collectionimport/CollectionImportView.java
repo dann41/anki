@@ -1,10 +1,10 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.collectionimport;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 
-public class CollectionImportView extends Core.BaseView implements CollectionImportContract.View {
+public class CollectionImportView extends BaseView implements CollectionImportContract.View {
   private final CollectionImportContract.Presenter presenter;
   private final CmdTools cmdTools;
 

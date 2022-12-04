@@ -2,14 +2,14 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckplayer;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-public class DeckPlayerView extends Core.BaseView implements DeckPlayerContract.View {
+public class DeckPlayerView extends BaseView implements DeckPlayerContract.View {
   private final DeckPlayerContract.Presenter presenter;
   private final CmdTools cmdTools;
 

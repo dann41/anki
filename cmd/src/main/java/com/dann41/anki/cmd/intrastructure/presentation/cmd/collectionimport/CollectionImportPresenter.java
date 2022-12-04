@@ -1,17 +1,16 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.collectionimport;
 
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class CollectionImportPresenter implements CollectionImportContract.Presenter {
+public class CollectionImportPresenter
+    extends BasePresenter<CollectionImportContract.View>
+    implements CollectionImportContract.Presenter {
   private final FileCollectionImporter importer;
-  private CollectionImportContract.View view;
-  private Navigator navigator;
-
   public CollectionImportPresenter(FileCollectionImporter importer) {
     this.importer = importer;
   }
@@ -28,15 +27,5 @@ public class CollectionImportPresenter implements CollectionImportContract.Prese
     }
 
     navigator.back();
-  }
-
-  @Override
-  public void onAttachView(CollectionImportContract.View view) {
-    this.view = view;
-  }
-
-  @Override
-  public void setNavigator(Navigator navigator) {
-    this.navigator = navigator;
   }
 }

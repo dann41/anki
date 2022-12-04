@@ -1,32 +1,22 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckselection;
 
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
 import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinderQuery;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DeckSelectionPresenter implements DeckSelectionContract.Presenter {
+public class DeckSelectionPresenter
+    extends BasePresenter<DeckSelectionContract.View>
+    implements DeckSelectionContract.Presenter {
 
   private final MyDecksFinder myDecksFinder;
   private final SessionInteractor sessionInteractor;
-  private DeckSelectionContract.View view;
-  private Navigator navigator;
 
   public DeckSelectionPresenter(MyDecksFinder myDecksFinder, SessionInteractor sessionInteractor) {
     this.myDecksFinder = myDecksFinder;
     this.sessionInteractor = sessionInteractor;
-  }
-
-  @Override
-  public void onAttachView(DeckSelectionContract.View view) {
-    this.view = view;
-  }
-
-  @Override
-  public void setNavigator(Navigator navigator) {
-    this.navigator = navigator;
   }
 
   @Override

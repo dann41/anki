@@ -1,7 +1,7 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckcreation;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.deck.application.deckcreator.CollectionNotFoundException;
@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class DeckCreationPresenter implements DeckCreationScreen.Presenter {
+public class DeckCreationPresenter
+    extends BasePresenter<DeckCreationScreen.View>
+    implements DeckCreationScreen.Presenter {
   private final AllCollectionsFinder allCollectionsFinder;
   private final DeckCreator deckCreator;
   private final ViewContext viewContext = new ViewContext();
   private final SessionInteractor sessionInteractor;
-  private DeckCreationScreen.View view;
-  private Navigator navigator;
-
   public DeckCreationPresenter(
       AllCollectionsFinder allCollectionsFinder,
       DeckCreator deckCreator,
@@ -38,16 +37,6 @@ public class DeckCreationPresenter implements DeckCreationScreen.Presenter {
 
     var deckId = sessionInteractor.deckSelected();
     viewContext.playDeck(deckId);
-  }
-
-  @Override
-  public void onAttachView(DeckCreationScreen.View view) {
-    this.view = view;
-  }
-
-  @Override
-  public void setNavigator(Navigator navigator) {
-    this.navigator = navigator;
   }
 
   @Override

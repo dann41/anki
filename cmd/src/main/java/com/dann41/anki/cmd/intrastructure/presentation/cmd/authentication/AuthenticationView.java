@@ -3,12 +3,12 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.authentication;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenu;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 
 import java.util.List;
 
-public class AuthenticationView extends Core.BaseView implements AuthenticationContract.View {
+public class AuthenticationView extends BaseView implements AuthenticationContract.View {
 
   public static final String SIGNUP_ACTION = "1";
   public static final String LOGIN_ACTION = "2";

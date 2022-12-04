@@ -2,7 +2,7 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckplayer;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
 import com.dann41.anki.core.deck.application.cardpicker.CardPicker;
 import com.dann41.anki.core.deck.application.cardpicker.CardPickerQuery;
@@ -22,7 +22,9 @@ import java.util.Locale;
 import java.util.Map;
 
 @Service
-public class DeckPlayerPresenter implements DeckPlayerContract.Presenter {
+public class DeckPlayerPresenter
+    extends BasePresenter<DeckPlayerContract.View>
+    implements DeckPlayerContract.Presenter {
   private static final Map<String, String> BOX_MAPPER = new HashMap<>();
 
   static {
@@ -37,9 +39,7 @@ public class DeckPlayerPresenter implements DeckPlayerContract.Presenter {
   private final StateFinder stateFinder;
   private final SessionInteractor sessionInteractor;
 
-  private DeckPlayerContract.View view;
-  private Navigator navigator;
-  private ViewContext viewContext = new ViewContext();
+  private final ViewContext viewContext = new ViewContext();
 
   public DeckPlayerPresenter(
       SessionStarter sessionStarter,
@@ -53,16 +53,6 @@ public class DeckPlayerPresenter implements DeckPlayerContract.Presenter {
     this.cardSolver = cardSolver;
     this.stateFinder = stateFinder;
     this.sessionInteractor = sessionInteractor;
-  }
-
-  @Override
-  public void onAttachView(DeckPlayerContract.View view) {
-    this.view = view;
-  }
-
-  @Override
-  public void setNavigator(Navigator navigator) {
-    this.navigator = navigator;
   }
 
   @Override

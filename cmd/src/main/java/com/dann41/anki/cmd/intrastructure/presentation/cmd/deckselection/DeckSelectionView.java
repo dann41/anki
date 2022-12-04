@@ -3,7 +3,7 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckselection;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenu;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.core.deck.application.alldecksfinder.DeckSummary;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DeckSelectionView extends Core.BaseView implements DeckSelectionContract.View {
+public class DeckSelectionView extends BaseView implements DeckSelectionContract.View {
   private final DeckSelectionContract.Presenter presenter;
   private final CmdTools cmdTools;
 

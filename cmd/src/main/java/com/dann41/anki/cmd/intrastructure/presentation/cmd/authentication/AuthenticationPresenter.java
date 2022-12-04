@@ -1,26 +1,12 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.authentication;
 
-import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
+import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenticationPresenter implements AuthenticationContract.Presenter {
-  private AuthenticationContract.View view;
-  private Navigator navigator;
-
-  public AuthenticationPresenter() {
-
-  }
-
-  @Override
-  public void onAttachView(AuthenticationContract.View view) {
-    this.view = view;
-  }
-
-  @Override
-  public void setNavigator(Navigator navigator) {
-    this.navigator = navigator;
-  }
+public class AuthenticationPresenter
+    extends BasePresenter<AuthenticationContract.View>
+    implements AuthenticationContract.Presenter {
 
   @Override
   public void onLoginSelected() {
