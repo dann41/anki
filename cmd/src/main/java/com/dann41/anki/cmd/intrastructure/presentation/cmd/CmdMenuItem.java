@@ -1,7 +1,6 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd;
 
 import java.util.List;
-import java.util.Set;
 
 public record CmdMenuItem(String message, List<String> options) {
 
