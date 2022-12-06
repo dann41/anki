@@ -1,13 +1,13 @@
 # How to build
 
 ```
-mvn clean
-mvn package
+./gradlew clean
+./gradlew build
 ```
 
 # How to run
 
-Maven should have created a dist folder. Inside there should be a bin folder with two scripts (one per Unix systems and another for Windows systems)
+Gradle should have created a build folder. Inside there should be a libs folder with a fat jar
 ```
-dist/bin/anki
+java -jar cmd/build/libs/cmd-1.0.0-SNAPSHOT.jar
 ```

@@ -1,12 +1,14 @@
 plugins {
     id 'idea'
-    id 'java'
 }
 
 group 'com.github.dann41'
 version "1.0.0-SNAPSHOT"
 
 subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
     group = rootProject.group
     version = rootProject.version
 
@@ -18,13 +20,8 @@ subprojects {
         useJUnitPlatform()
     }
 
-    java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    apply plugin: 'idea'
-    apply plugin: 'java'
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
