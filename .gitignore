@@ -1,6 +1,8 @@
 .DS_STORE
-.idea
+/.idea/
 anki.iml
 /target/
 /core/target/
 /cmd/target/
+build/
+/.gradle/
