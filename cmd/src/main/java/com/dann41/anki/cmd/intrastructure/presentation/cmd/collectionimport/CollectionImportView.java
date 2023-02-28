@@ -33,7 +33,7 @@ public class CollectionImportView extends BaseView implements CollectionImportCo
   }
 
   private void displayCollectionImportDialog() {
-    System.out.println("Select file to import (e.g. core/src/main/resources/cards.tsv): ");
+    System.out.println("Select file to import (e.g. core/src/main/resources/collections/cards.tsv): ");
     String resourceName = cmdTools.readLine();
     System.out.println("Name of the collection: ");
     String collectionName = cmdTools.readLine();
