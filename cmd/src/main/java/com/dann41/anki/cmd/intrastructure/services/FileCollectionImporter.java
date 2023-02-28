@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class FileCollectionImporter {
   private static final String FIELD_SEPARATOR = "\\|";
-  private static final String FILENAME = "core/src/main/resources/cards.tsv";
 
   private final CardCollectionsImporter cardCollectionsImporter;
 
