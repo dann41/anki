@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(
     scanBasePackageClasses = {CoreModule.class, CmdConfiguration.class}
 )
-public class Main {
+public class CmdApplication {
 
   public static void main(String[] args) {
-    var context = SpringApplication.run(Main.class, args);
+    var context = SpringApplication.run(CmdApplication.class, args);
     context.getBean(Starter.class).start();
   }
 }
