@@ -1,12 +1,13 @@
 package com.dann41.anki.core.user.infrastructure.repository.jpa;
 
 import com.dann41.anki.core.user.domain.User;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "authentication")
@@ -20,7 +21,7 @@ public class UserEntity {
   private String username;
 
   @Column(columnDefinition = "jsonb")
-  @Type(type = "com.vladmihalcea.hibernate.type.json.JsonType")
+  @Type(value = JsonType.class)
   private UserDTO payload;
 
   private Long payloadVersion;
