@@ -1,4 +1,3 @@
-# Use postgres/example user/password credentials
 version: '3.1'
 
 services:
@@ -12,11 +11,11 @@ services:
     ports:
       - "5432:5432"
 
-  cmd:
-    image: dann41/anki-cmd:0.0.1
-    stdin_open: true
-    tty: true
-    volumes:
-      - /Users/daniel.gomez/personal/projects/anki/core/src/main/resources/collections:/collections
-    environment:
-      SPRING_PROFILES_ACTIVE: pro
+#  cmd:
+#    image: dann41/anki-cmd:0.0.1
+#    stdin_open: true
+#    tty: true
+#    volumes:
+#      - /Users/daniel.gomez/personal/projects/anki/core/src/main/resources/collections:/collections
+#    environment:
+#      SPRING_PROFILES_ACTIVE: pro

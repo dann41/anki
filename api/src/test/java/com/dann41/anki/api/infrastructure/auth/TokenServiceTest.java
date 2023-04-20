@@ -27,10 +27,10 @@ class TokenServiceTest {
     var tokenService = new TokenService(Clock.systemUTC(), publicKey, privateKey);
 
     var token = tokenService.generate(USER_ID, USERNAME);
-    var claims = tokenService.verify(token);
+    var jwtToken = tokenService.verify(token);
 
-    assertThat(claims.get("userId")).isEqualTo(USER_ID);
-    assertThat(claims.get("username")).isEqualTo(USERNAME);
+    assertThat(jwtToken.claims().get("userId")).isEqualTo(USER_ID);
+    assertThat(jwtToken.claims().get("username")).isEqualTo(USERNAME);
   }
 
   @Test

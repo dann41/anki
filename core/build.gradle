@@ -15,4 +15,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
 }
 
+bootJar {
+    enabled = false
+}
+
 description = 'core'
