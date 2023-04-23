@@ -2,8 +2,8 @@ package com.dann41.anki.cmd.intrastructure.services;
 
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardCollectionRequest;
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardRequest;
-import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardCollectionsImporter;
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.ImportCollectionsCommand;
+import com.dann41.anki.shared.application.CommandBus;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
 public class FileCollectionImporter {
   private static final String FIELD_SEPARATOR = "\\|";
 
-  private final CardCollectionsImporter cardCollectionsImporter;
+  private final CommandBus commandBus;
 
-  public FileCollectionImporter(CardCollectionsImporter cardCollectionsImporter) {
-    this.cardCollectionsImporter = cardCollectionsImporter;
+  public FileCollectionImporter(CommandBus commandBus) {
+    this.commandBus = commandBus;
   }
 
   public void importCollection(String resourceName, String id, String name) {
     var cards = readCards(resourceName);
     var collection = new CardCollectionRequest(id, name, cards);
-    cardCollectionsImporter.execute(new ImportCollectionsCommand(List.of(collection)));
+    commandBus.publish(new ImportCollectionsCommand(List.of(collection)));
   }
 
   private Collection<CardRequest> readCards(String resourceName) {

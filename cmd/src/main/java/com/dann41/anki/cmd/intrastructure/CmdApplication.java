@@ -3,11 +3,12 @@ package com.dann41.anki.cmd.intrastructure;
 import com.dann41.anki.cmd.intrastructure.configuration.CmdConfiguration;
 import com.dann41.anki.cmd.intrastructure.services.Starter;
 import com.dann41.anki.core.shared.infrastructure.framework.CoreModule;
+import com.dann41.anki.shared.infrastructure.framework.SharedModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(
-    scanBasePackageClasses = {CoreModule.class, CmdConfiguration.class}
+    scanBasePackageClasses = {CmdConfiguration.class}
 )
 public class CmdApplication {
 

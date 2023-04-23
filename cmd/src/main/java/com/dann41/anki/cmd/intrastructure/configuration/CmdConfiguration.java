@@ -3,13 +3,13 @@ package com.dann41.anki.cmd.intrastructure.configuration;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
 import com.dann41.anki.cmd.intrastructure.services.FileCollectionImporter;
 import com.dann41.anki.cmd.intrastructure.services.Starter;
-import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardCollectionsImporter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import com.dann41.anki.core.shared.infrastructure.framework.CoreModule;
+import com.dann41.anki.shared.application.CommandBus;
+import com.dann41.anki.shared.infrastructure.framework.SharedModule;
+import org.springframework.context.annotation.*;
 
 @Configuration
+@Import({SharedModule.class, CoreModule.class})
 @ComponentScan(basePackages = "com.dann41.anki.cmd.intrastructure.presentation")
 public class CmdConfiguration {
 
@@ -20,7 +20,7 @@ public class CmdConfiguration {
   }
 
   @Bean
-  FileCollectionImporter fileCollectionImporter(CardCollectionsImporter cardCollectionsImporter) {
-    return new FileCollectionImporter(cardCollectionsImporter);
+  FileCollectionImporter fileCollectionImporter(CommandBus commandBus) {
+    return new FileCollectionImporter(commandBus);
   }
 }

@@ -2,6 +2,7 @@ package com.dann41.anki.core.cardcollection.infrastructure.framework;
 
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardCollectionsImporter;
+import com.dann41.anki.core.cardcollection.application.collectionsimporter.ImportCollectionsCommandHandler;
 import com.dann41.anki.core.cardcollection.domain.CardCollectionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,13 @@ public class CardCollectionConfiguration {
   @Bean
   public CardCollectionsImporter collectionImporter(CardCollectionRepository cardCollectionRepository) {
     return new CardCollectionsImporter(cardCollectionRepository);
+  }
+
+  @Bean
+  public ImportCollectionsCommandHandler importCollectionsCommandHandler(
+          CardCollectionsImporter cardCollectionsImporter
+  ) {
+    return new ImportCollectionsCommandHandler(cardCollectionsImporter);
   }
 
 }
