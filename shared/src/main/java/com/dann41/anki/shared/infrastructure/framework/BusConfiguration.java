@@ -1,8 +1,6 @@
 package com.dann41.anki.shared.infrastructure.framework;
 
-import com.dann41.anki.shared.application.Command;
-import com.dann41.anki.shared.application.CommandBus;
-import com.dann41.anki.shared.application.CommandHandler;
+import com.dann41.anki.shared.application.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +17,19 @@ public class BusConfiguration {
                         .collect(
                                 Collectors.toMap(
                                         CommandHandler::supports,
+                                        item -> item
+                                )
+                        )
+        );
+    }
+
+    @Bean
+    public QueryBus queryBus(List<QueryHandler<? extends Query<?>, ? extends QueryResponse>> handlers) {
+        return new DispatcherQueryBus(
+                handlers.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        QueryHandler::supports,
                                         item -> item
                                 )
                         )

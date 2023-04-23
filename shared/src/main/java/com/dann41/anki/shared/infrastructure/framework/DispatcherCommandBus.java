@@ -17,11 +17,12 @@ public class DispatcherCommandBus implements CommandBus {
         this.commandHandlers = commandHandlers;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Command> void publish(T command) {
         var handler = (CommandHandler<T>) commandHandlers.get(command.getClass());
         if (handler == null) {
-            LOGGER.info("Command not supported");
+            LOGGER.info("Command not supported: " + command.getClass().getSimpleName());
         } else {
             handler.handle(command);
         }

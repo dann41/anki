@@ -4,9 +4,11 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
+import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsQuery;
 import com.dann41.anki.core.deck.application.deckcreator.CollectionNotFoundException;
 import com.dann41.anki.core.deck.application.deckcreator.CreateDeckCommand;
 import com.dann41.anki.core.deck.application.deckcreator.DeckCreator;
+import com.dann41.anki.shared.application.QueryBus;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -19,14 +21,16 @@ public class DeckCreationPresenter
   private final DeckCreator deckCreator;
   private final ViewContext viewContext = new ViewContext();
   private final SessionInteractor sessionInteractor;
+  private final QueryBus queryBus;
   public DeckCreationPresenter(
       AllCollectionsFinder allCollectionsFinder,
       DeckCreator deckCreator,
-      SessionInteractor sessionInteractor
-  ) {
+      SessionInteractor sessionInteractor,
+      QueryBus queryBus) {
     this.allCollectionsFinder = allCollectionsFinder;
     this.deckCreator = deckCreator;
     this.sessionInteractor = sessionInteractor;
+    this.queryBus = queryBus;
   }
 
   private void loadViewContext() {
@@ -42,8 +46,8 @@ public class DeckCreationPresenter
   @Override
   public void loadCollections() {
     loadViewContext();
-
-    view.displayCollections(allCollectionsFinder.execute().collections());
+    var collections = queryBus.publish(new AllCollectionsQuery()).collections();
+    view.displayCollections(collections);
   }
 
   @Override

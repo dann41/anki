@@ -1,6 +1,7 @@
 package com.dann41.anki.core.cardcollection.infrastructure.framework;
 
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
+import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsQueryHandler;
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardCollectionsImporter;
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.ImportCollectionsCommandHandler;
 import com.dann41.anki.core.cardcollection.domain.CardCollectionRepository;
@@ -27,4 +28,10 @@ public class CardCollectionConfiguration {
     return new ImportCollectionsCommandHandler(cardCollectionsImporter);
   }
 
+  @Bean
+  public AllCollectionsQueryHandler allCollectionsQueryHandler(
+          AllCollectionsFinder allCollectionsFinder
+  ) {
+    return new AllCollectionsQueryHandler(allCollectionsFinder);
+  }
 }
