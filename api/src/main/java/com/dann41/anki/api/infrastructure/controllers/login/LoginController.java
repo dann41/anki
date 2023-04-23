@@ -1,6 +1,6 @@
 package com.dann41.anki.api.infrastructure.controllers.login;
 
-import com.dann41.anki.api.infrastructure.auth.TokenService;
+import com.dann41.anki.auth.infrastructure.auth.TokenService;
 import com.dann41.anki.core.user.application.authenticator.UserAuthenticator;
 import com.dann41.anki.core.user.application.authenticator.UserAuthenticatorCommand;
 import com.dann41.anki.core.user.application.userfinder.UserFinder;

@@ -5,6 +5,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'anki'
+
+include(':shared')
 include(':core')
-include(':cmd')
+include(':auth')
+
 include(':api')
+include(':cmd')

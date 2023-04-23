@@ -1,0 +1,43 @@
+GET http://localhost:8080/auth/hello
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJ1c2VySWQiOiI2Njc4MzhjOS02NDI3LTQ4ZDItYmQwYy1iOWRiZWNlZmIzODkiLCJ1c2VybmFtZSI6InBlcGUiLCJleHAiOjE2ODIyODA2NjN9.XPsXDjmcG46YO4c2iTPLGK2EnL1XkRO2GNoAlx4Hj5ZakO8olqirRTtMKuoUiA00pFDG7YyQX5g8RRn6MR5XFE3ZMw2Ys9wpqdu1mMiREC2n_sXXgrZ0j62osS9szm-CKJpBJp4VgiEqEP3_WWAIBGgoW1RbQKRaliGH7bA56c7NTRfEyGD4BzgFo3rGrvhAPIcbGOTbhYUyPi7MzhVKaLQvn20qr6FWunyfgLfmmu0JSSMpRgahArq9ZGhVJlecdXq72bcPtudC-Wh88CKk-rk3FRvM-L9CLyMg3tjeetAmdi_gJiaNu9hdpOJIeBydyjQLlMk1CDoFywVXW-0iAw
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-04-23T215614.200.txt
+
+###
+
+POST http://localhost:8080/login
+content-type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{"username":  "pepe", "password":  "pepa"}
+
+<> 2023-04-23T215603.200.json
+
+###
+
+POST http://localhost:8080/login
+content-type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{"username":  "pepe", "password":  "pepa"}
+
+<> 2023-04-23T215525.500.json
+
+###
+
+GET http://localhost:8080/auth/hello
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+

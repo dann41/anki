@@ -1,6 +1,6 @@
 package com.dann41.anki.api.infrastructure.controllers;
 
-import com.dann41.anki.api.infrastructure.auth.AuthUser;
+import com.dann41.anki.auth.infrastructure.auth.AuthUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
