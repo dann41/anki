@@ -3,7 +3,6 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckcreation;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
-import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsFinder;
 import com.dann41.anki.core.cardcollection.application.allcollectionsfinder.AllCollectionsQuery;
 import com.dann41.anki.core.deck.application.deckcreator.CollectionNotFoundException;
 import com.dann41.anki.core.deck.application.deckcreator.CreateDeckCommand;
@@ -17,17 +16,14 @@ import java.util.UUID;
 public class DeckCreationPresenter
     extends BasePresenter<DeckCreationScreen.View>
     implements DeckCreationScreen.Presenter {
-  private final AllCollectionsFinder allCollectionsFinder;
   private final DeckCreator deckCreator;
   private final ViewContext viewContext = new ViewContext();
   private final SessionInteractor sessionInteractor;
   private final QueryBus queryBus;
   public DeckCreationPresenter(
-      AllCollectionsFinder allCollectionsFinder,
       DeckCreator deckCreator,
       SessionInteractor sessionInteractor,
       QueryBus queryBus) {
-    this.allCollectionsFinder = allCollectionsFinder;
     this.deckCreator = deckCreator;
     this.sessionInteractor = sessionInteractor;
     this.queryBus = queryBus;
