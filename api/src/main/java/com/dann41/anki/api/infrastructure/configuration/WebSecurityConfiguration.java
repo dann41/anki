@@ -1,9 +1,8 @@
 package com.dann41.anki.api.infrastructure.configuration;
 
 import com.dann41.anki.auth.infrastructure.auth.AuthUser;
-import com.dann41.anki.core.user.domain.User;
-import com.dann41.anki.core.user.domain.UserRepository;
-import com.dann41.anki.core.user.domain.Username;
+import com.dann41.anki.core.user.application.userfinder.FindUserByUsernameQuery;
+import com.dann41.anki.shared.application.QueryBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -37,9 +36,9 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public ReactiveUserDetailsService reactiveUserDetailsService(UserRepository userRepository) {
+    public ReactiveUserDetailsService reactiveUserDetailsService(QueryBus queryBus) {
         return username -> Mono.fromCallable(() -> {
-            User user = userRepository.findByUsername(new Username(username));
+            var user = queryBus.publish(new FindUserByUsernameQuery(username));
             return new AuthUser(user);
         });
     }

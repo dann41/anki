@@ -1,7 +1,7 @@
 package com.dann41.anki.auth.infrastructure.auth;
 
-import com.dann41.anki.core.user.domain.UserId;
-import com.dann41.anki.core.user.domain.UserRepository;
+import com.dann41.anki.core.user.application.userfinder.FindUserByIdQuery;
+import com.dann41.anki.shared.application.QueryBus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,11 +12,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class BearerAuthenticationProvider implements AuthenticationProvider {
 
     private final TokenService tokenService;
-    private final UserRepository userRepository;
+    private final QueryBus queryBus;
 
-    public BearerAuthenticationProvider(TokenService tokenService, UserRepository userRepository) {
+    public BearerAuthenticationProvider(TokenService tokenService, QueryBus queryBus) {
         this.tokenService = tokenService;
-        this.userRepository = userRepository;
+        this.queryBus = queryBus;
     }
 
     @Override
@@ -32,8 +32,7 @@ public class BearerAuthenticationProvider implements AuthenticationProvider {
     }
 
     private UserDetails retrieveUser(String userId, String userName) throws AuthenticationException {
-        var id = new UserId(userId);
-        var user = userRepository.findById(id);
+        var user = queryBus.publish(new FindUserByIdQuery(userId));
         if (user == null) {
             throw new UsernameNotFoundException(userName);
         }

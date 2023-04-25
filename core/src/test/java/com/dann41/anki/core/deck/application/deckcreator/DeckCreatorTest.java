@@ -3,8 +3,8 @@ package com.dann41.anki.core.deck.application.deckcreator;
 import com.dann41.anki.core.cardcollection.domain.CardCollection;
 import com.dann41.anki.core.cardcollection.domain.CardCollectionId;
 import com.dann41.anki.core.cardcollection.domain.CardCollectionRepository;
+import com.dann41.anki.core.cardcollection.domain.CollectionNotFoundException;
 import com.dann41.anki.core.cardcollection.domain.card.CardDTO;
-import com.dann41.anki.core.deck.deckcreator.CreateDeckCommand;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckAlreadyExistsException;
 import com.dann41.anki.core.deck.domain.DeckId;
@@ -27,72 +27,72 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class DeckCreatorTest {
-  private static final DeckId DECK_ID = new DeckId("1234");
-  private static final UserId USER_ID = new UserId("blabla");
-  private static final String COLLECTION_ID = "arts";
-  @Mock
-  private DeckRepository deckRepository;
-  @Mock
-  private CardCollectionRepository cardCollectionRepository;
-  @InjectMocks
-  private DeckCreator deckCreator;
+    private static final DeckId DECK_ID = new DeckId("1234");
+    private static final UserId USER_ID = new UserId("blabla");
+    private static final String COLLECTION_ID = "arts";
+    @Mock
+    private DeckRepository deckRepository;
+    @Mock
+    private CardCollectionRepository cardCollectionRepository;
+    @InjectMocks
+    private DeckCreator deckCreator;
 
-  @Test
-  public void shouldCreateDeskWithCardCatalog() {
-    CreateDeckCommand command = createDeckCommand();
-    givenCardCatalog();
+    private static CreateDeckCommand createDeckCommand() {
+        return new CreateDeckCommand(DECK_ID.value(), USER_ID.value(), COLLECTION_ID);
+    }
 
-    deckCreator.execute(command);
+    @Test
+    public void shouldCreateDeskWithCardCatalog() {
+        CreateDeckCommand command = createDeckCommand();
+        givenCardCatalog();
 
-    verifyDeckSavedWithCatalog();
-  }
+        deckCreator.execute(command);
 
-  @Test
-  public void shouldThrowExceptionWhenCatalogDoesNotExist() {
-    CreateDeckCommand command = createDeckCommand();
+        verifyDeckSavedWithCatalog();
+    }
 
-    assertThatThrownBy(() -> deckCreator.execute(command))
-        .isInstanceOf(CollectionNotFoundException.class);
-  }
+    @Test
+    public void shouldThrowExceptionWhenCatalogDoesNotExist() {
+        CreateDeckCommand command = createDeckCommand();
 
-  @Test
-  public void shouldThrowExceptionWhenDeckAlreadyExists() {
-    givenExistingDeck();
-    CreateDeckCommand command = createDeckCommand();
+        assertThatThrownBy(() -> deckCreator.execute(command))
+                .isInstanceOf(CollectionNotFoundException.class);
+    }
 
-    assertThatThrownBy(() -> deckCreator.execute(command))
-        .isInstanceOf(DeckAlreadyExistsException.class);
-  }
+    @Test
+    public void shouldThrowExceptionWhenDeckAlreadyExists() {
+        givenExistingDeck();
+        CreateDeckCommand command = createDeckCommand();
 
-  private void givenCardCatalog() {
-    given(cardCollectionRepository.findById(new CardCollectionId(COLLECTION_ID)))
-        .willReturn(
-            new CardCollection(
-                COLLECTION_ID,
-                COLLECTION_ID,
-                COLLECTION_ID,
-                Collections.singletonList(
-                    new CardDTO("question", "answer")
-                )
-            )
-        );
-  }
+        assertThatThrownBy(() -> deckCreator.execute(command))
+                .isInstanceOf(DeckAlreadyExistsException.class);
+    }
 
-  private void givenExistingDeck() {
-    given(deckRepository.findById(DECK_ID))
-        .willReturn(Deck.create(DECK_ID.value(), USER_ID.value(), COLLECTION_ID, Collections.emptyList()));
-  }
+    private void givenCardCatalog() {
+        given(cardCollectionRepository.findById(new CardCollectionId(COLLECTION_ID)))
+                .willReturn(
+                        new CardCollection(
+                                COLLECTION_ID,
+                                COLLECTION_ID,
+                                COLLECTION_ID,
+                                Collections.singletonList(
+                                        new CardDTO("question", "answer")
+                                )
+                        )
+                );
+    }
 
-  private void verifyDeckSavedWithCatalog() {
-    ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
-    verify(deckRepository, times(1)).save(captor.capture());
+    private void givenExistingDeck() {
+        given(deckRepository.findById(DECK_ID))
+                .willReturn(Deck.create(DECK_ID.value(), USER_ID.value(), COLLECTION_ID, Collections.emptyList()));
+    }
 
-    Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.id()).isEqualTo(DECK_ID);
-    assertThat(savedDeck.unansweredCards()).containsExactly("question");
-  }
+    private void verifyDeckSavedWithCatalog() {
+        ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository, times(1)).save(captor.capture());
 
-  private static CreateDeckCommand createDeckCommand() {
-    return new CreateDeckCommand(DECK_ID.value(), USER_ID.value(), COLLECTION_ID);
-  }
+        Deck savedDeck = captor.getValue();
+        assertThat(savedDeck.id()).isEqualTo(DECK_ID);
+        assertThat(savedDeck.unansweredCards()).containsExactly("question");
+    }
 }

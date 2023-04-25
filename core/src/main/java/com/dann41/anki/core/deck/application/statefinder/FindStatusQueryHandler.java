@@ -1,7 +1,5 @@
 package com.dann41.anki.core.deck.application.statefinder;
 
-import com.dann41.anki.core.deck.statefinder.FindStatusQuery;
-import com.dann41.anki.core.deck.statefinder.FindStatusResponse;
 import com.dann41.anki.shared.application.QueryHandler;
 
 public class FindStatusQueryHandler implements QueryHandler<FindStatusQuery, FindStatusResponse> {

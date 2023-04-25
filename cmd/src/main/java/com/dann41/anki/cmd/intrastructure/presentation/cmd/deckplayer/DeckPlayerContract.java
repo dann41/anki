@@ -2,26 +2,26 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckplayer;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
-import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
+import com.dann41.anki.core.deck.application.cardpicker.CardPickerResponse;
 
 public interface DeckPlayerContract {
-  interface View extends Core.View {
-    void displayState(AnkiState ankiState);
+    interface View extends Core.View {
+        void displayState(AnkiState ankiState);
 
-    void displayCard(CardPickerResponse cardPickerResponse);
+        void displayCard(CardPickerResponse cardPickerResponse);
 
-    void requestBoxCategorization(String cardId);
+        void requestBoxCategorization(String cardId);
 
-    void displaySessionEnded();
+        void displaySessionEnded();
 
-    void displayWrongBoxName(String cardId, String box);
+        void displayWrongBoxName(String cardId, String box);
 
-    void displayDeckNotFound(String deckId);
-  }
+        void displayDeckNotFound(String deckId);
+    }
 
-  interface Presenter extends Core.Presenter<View> {
-    void playDeck();
+    interface Presenter extends Core.Presenter<View> {
+        void playDeck();
 
-    void solveCard(String cardId, String box);
-  }
+        void solveCard(String cardId, String box);
+    }
 }

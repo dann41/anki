@@ -1,6 +1,5 @@
 package com.dann41.anki.core.deck.application.deckremover;
 
-import com.dann41.anki.core.deck.deckremover.DeleteDeckCommand;
 import com.dann41.anki.shared.application.CommandHandler;
 
 public class DeleteDeckCommandHandler implements CommandHandler<DeleteDeckCommand> {

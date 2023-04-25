@@ -1,7 +1,5 @@
 package com.dann41.anki.core.deck.application.cardpicker;
 
-import com.dann41.anki.core.deck.cardpicker.CardPickerQuery;
-import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
 import com.dann41.anki.shared.application.QueryHandler;
 
 public class CardPickerQueryHandler implements QueryHandler<CardPickerQuery, CardPickerResponse> {

@@ -1,6 +1,5 @@
 package com.dann41.anki.core.deck.application.deckremover;
 
-import com.dann41.anki.core.deck.deckremover.DeleteDeckCommand;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckMother;
@@ -22,25 +21,25 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class DeckDeleterTest {
 
-  @Mock
-  private DeckRepository deckRepository;
+    @Mock
+    private DeckRepository deckRepository;
 
-  @InjectMocks
-  private DeckDeleter deckDeleter;
+    @InjectMocks
+    private DeckDeleter deckDeleter;
 
-  @Test
-  public void shouldDeleteDeck() {
-    givenDeck(DeckMother.defaultDeck());
+    @Test
+    public void shouldDeleteDeck() {
+        givenDeck(DeckMother.defaultDeck());
 
-    deckDeleter.execute(new DeleteDeckCommand(DECK_ID, USER_ID));
+        deckDeleter.execute(new DeleteDeckCommand(DECK_ID, USER_ID));
 
-    var captor = ArgumentCaptor.forClass(Deck.class);
-    verify(deckRepository, times(1)).save(captor.capture());
-    assertThat(captor.getValue().isDeleted()).isTrue();
-  }
+        var captor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository, times(1)).save(captor.capture());
+        assertThat(captor.getValue().isDeleted()).isTrue();
+    }
 
-  private void givenDeck(Deck deck) {
-    given(deckRepository.findById(new DeckId(DECK_ID))).willReturn(deck);
-  }
+    private void givenDeck(Deck deck) {
+        given(deckRepository.findById(new DeckId(DECK_ID))).willReturn(deck);
+    }
 
 }

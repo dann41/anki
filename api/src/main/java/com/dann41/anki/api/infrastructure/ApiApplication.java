@@ -2,12 +2,12 @@ package com.dann41.anki.api.infrastructure;
 
 import com.dann41.anki.api.infrastructure.configuration.ApiConfiguration;
 import com.dann41.anki.auth.infrastructure.framework.configuration.AuthModule;
-import com.dann41.anki.core.shared.infrastructure.framework.CoreModule;
+import com.dann41.anki.core.shared.infrastructure.framework.CoreApiModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(
-    scanBasePackageClasses = {CoreModule.class, ApiConfiguration.class, AuthModule.class}
+    scanBasePackageClasses = {CoreApiModule.class, ApiConfiguration.class, AuthModule.class}
 )
 public class ApiApplication {
 

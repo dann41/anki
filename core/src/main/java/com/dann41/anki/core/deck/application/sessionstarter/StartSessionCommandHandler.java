@@ -1,6 +1,5 @@
 package com.dann41.anki.core.deck.application.sessionstarter;
 
-import com.dann41.anki.core.deck.sessionstarter.StartSessionCommand;
 import com.dann41.anki.shared.application.CommandHandler;
 
 public class StartSessionCommandHandler implements CommandHandler<StartSessionCommand> {

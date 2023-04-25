@@ -1,12 +1,6 @@
 package com.dann41.anki.core.deck.application.cardpicker;
 
-import com.dann41.anki.core.deck.cardpicker.CardPickerQuery;
-import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
-import com.dann41.anki.core.deck.domain.Deck;
-import com.dann41.anki.core.deck.domain.DeckId;
-import com.dann41.anki.core.deck.domain.DeckMother;
-import com.dann41.anki.core.deck.domain.DeckNotFoundException;
-import com.dann41.anki.core.deck.domain.DeckRepository;
+import com.dann41.anki.core.deck.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,48 +20,45 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class CardPickerTest {
 
-  @Mock
-  private DeckRepository deckRepository;
+    private final Clock clock = Clock.fixed(Instant.parse("2022-11-10T22:30:00.00Z"), ZoneId.systemDefault());
+    @Mock
+    private DeckRepository deckRepository;
+    private CardPicker cardPicker;
 
-  private final Clock clock = Clock.fixed(Instant.parse("2022-11-10T22:30:00.00Z"), ZoneId.systemDefault());
+    private static CardPickerQuery cardPickerQuery() {
+        return new CardPickerQuery(DECK_ID, USER_ID);
+    }
 
-  private CardPicker cardPicker;
+    @BeforeEach
+    public void setup() {
+        cardPicker = new CardPicker(deckRepository, clock);
+    }
 
+    @Test
+    public void givenExistingDeckWithUnansweredCardsShouldReturnNextCard() {
+        givenDeck(DeckMother.defaultDeck());
 
-  @BeforeEach
-  public void setup() {
-    cardPicker = new CardPicker(deckRepository, clock);
-  }
+        CardPickerResponse response = cardPicker.execute(cardPickerQuery());
 
-  @Test
-  public void givenExistingDeckWithUnansweredCardsShouldReturnNextCard() {
-    givenDeck(DeckMother.defaultDeck());
+        assertThat(response).isEqualTo(new CardPickerResponse("A", "A", "Answer A"));
+    }
 
-    CardPickerResponse response = cardPicker.execute(cardPickerQuery());
+    @Test
+    public void givenNonExistingDeckShouldThrowException() {
+        assertThatThrownBy(() -> cardPicker.execute(cardPickerQuery()))
+                .isInstanceOf(DeckNotFoundException.class);
+    }
 
-    assertThat(response).isEqualTo(new CardPickerResponse("A", "A", "Answer A"));
-  }
+    @Test
+    public void givenExistingDeckWithoutPendingCardsShouldReturnNull() {
+        givenDeck(DeckMother.withoutPendingForToday());
 
-  @Test
-  public void givenNonExistingDeckShouldThrowException() {
-    assertThatThrownBy(() -> cardPicker.execute(cardPickerQuery()))
-        .isInstanceOf(DeckNotFoundException.class);
-  }
+        CardPickerResponse response = cardPicker.execute(cardPickerQuery());
 
-  @Test
-  public void givenExistingDeckWithoutPendingCardsShouldReturnNull() {
-    givenDeck(DeckMother.withoutPendingForToday());
+        assertThat(response).isNull();
+    }
 
-    CardPickerResponse response = cardPicker.execute(cardPickerQuery());
-
-    assertThat(response).isNull();
-  }
-
-  private void givenDeck(Deck deck) {
-    given(deckRepository.findById(new DeckId(DECK_ID))).willReturn(deck);
-  }
-
-  private static CardPickerQuery cardPickerQuery() {
-    return new CardPickerQuery(DECK_ID, USER_ID);
-  }
+    private void givenDeck(Deck deck) {
+        given(deckRepository.findById(new DeckId(DECK_ID))).willReturn(deck);
+    }
 }

@@ -1,6 +1,5 @@
 package com.dann41.anki.core.deck.application.deckcreator;
 
-import com.dann41.anki.core.deck.deckcreator.CreateDeckCommand;
 import com.dann41.anki.shared.application.CommandHandler;
 
 public class CreateDeckCommandHandler implements CommandHandler<CreateDeckCommand> {

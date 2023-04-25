@@ -3,7 +3,7 @@ package com.dann41.anki.auth.infrastructure.framework.configuration;
 import com.dann41.anki.auth.infrastructure.auth.BearerAuthenticationConverter;
 import com.dann41.anki.auth.infrastructure.auth.BearerAuthenticationProvider;
 import com.dann41.anki.auth.infrastructure.auth.TokenService;
-import com.dann41.anki.core.user.domain.UserRepository;
+import com.dann41.anki.shared.application.QueryBus;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +23,8 @@ public class AuthConfiguration {
     }
 
     @Bean
-    BearerAuthenticationProvider bearerAuthenticationProvider(TokenService tokenService, UserRepository userRepository) {
-        return new BearerAuthenticationProvider(tokenService, userRepository);
+    BearerAuthenticationProvider bearerAuthenticationProvider(TokenService tokenService, QueryBus queryBus) {
+        return new BearerAuthenticationProvider(tokenService, queryBus);
     }
 
     @Bean

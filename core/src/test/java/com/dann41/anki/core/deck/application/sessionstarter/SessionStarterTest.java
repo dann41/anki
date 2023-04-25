@@ -4,7 +4,6 @@ import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.DeckRepository;
-import com.dann41.anki.core.deck.sessionstarter.StartSessionCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,131 +26,128 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class SessionStarterTest {
 
-  private static final DeckId DECK_ID_VO = new DeckId(DECK_ID);
+    private static final DeckId DECK_ID_VO = new DeckId(DECK_ID);
+    private final Clock clock = Clock.fixed(Instant.parse("2022-11-11T22:30:00.00Z"), ZoneId.systemDefault());
+    @Mock
+    private DeckRepository deckRepository;
+    private SessionStarter sessionStarter;
 
-  @Mock
-  private DeckRepository deckRepository;
+    private static StartSessionCommand startSessionCommand() {
+        return new StartSessionCommand(DECK_ID, USER_ID);
+    }
 
-  private final Clock clock = Clock.fixed(Instant.parse("2022-11-11T22:30:00.00Z"), ZoneId.systemDefault());
+    @BeforeEach
+    public void setup() {
+        sessionStarter = new SessionStarter(deckRepository, clock);
+    }
 
-  private SessionStarter sessionStarter;
+    @Test
+    public void shouldStartFirstSession() {
+        givenExistingDeck();
+        StartSessionCommand command = startSessionCommand();
 
-  @BeforeEach
-  public void setup() {
-    sessionStarter = new SessionStarter(deckRepository, clock);
-  }
+        sessionStarter.execute(command);
 
-  @Test
-  public void shouldStartFirstSession() {
-    givenExistingDeck();
-    StartSessionCommand command = startSessionCommand();
+        verifyDeckSavedWithSessionStarted();
+    }
 
-    sessionStarter.execute(command);
+    @Test
+    public void shouldStartNewSession() {
+        givenExistingDeckWithYesterdaySession();
+        StartSessionCommand command = startSessionCommand();
 
-    verifyDeckSavedWithSessionStarted();
-  }
+        sessionStarter.execute(command);
 
-  @Test
-  public void shouldStartNewSession() {
-    givenExistingDeckWithYesterdaySession();
-    StartSessionCommand command = startSessionCommand();
+        verifyDeckSavedWithSessionStarted();
+    }
 
-    sessionStarter.execute(command);
+    @Test
+    public void shouldRotateBoxesOnce() {
+        givenExistingDeckWithYesterdaySession();
+        StartSessionCommand command = startSessionCommand();
 
-    verifyDeckSavedWithSessionStarted();
-  }
+        sessionStarter.execute(command);
 
-  @Test
-  public void shouldRotateBoxesOnce() {
-    givenExistingDeckWithYesterdaySession();
-    StartSessionCommand command = startSessionCommand();
+        verifyDeckSavedWithBoxRotatedOnce();
+    }
 
-    sessionStarter.execute(command);
+    @Test
+    public void shouldRotateBoxesTwice() {
+        givenExistingDeckWithOldSession();
+        StartSessionCommand command = startSessionCommand();
 
-    verifyDeckSavedWithBoxRotatedOnce();
-  }
+        sessionStarter.execute(command);
 
-  @Test
-  public void shouldRotateBoxesTwice() {
-    givenExistingDeckWithOldSession();
-    StartSessionCommand command = startSessionCommand();
+        verifyDeckSavedWithBoxRotatedTwice();
+    }
 
-    sessionStarter.execute(command);
+    @Test
+    public void shouldNotRotateBoxesWhenStartSessionOnSameDay() {
+        givenExistingDeckWithTodaySession();
+        StartSessionCommand command = startSessionCommand();
 
-    verifyDeckSavedWithBoxRotatedTwice();
-  }
+        sessionStarter.execute(command);
 
-  @Test
-  public void shouldNotRotateBoxesWhenStartSessionOnSameDay() {
-    givenExistingDeckWithTodaySession();
-    StartSessionCommand command = startSessionCommand();
+        verifyDeckSavedWithoutRotatingBoxes();
+    }
 
-    sessionStarter.execute(command);
+    private void givenExistingDeck() {
+        given(deckRepository.findById(DECK_ID_VO))
+                .willReturn(DeckMother.withSession(null));
+    }
 
-    verifyDeckSavedWithoutRotatingBoxes();
-  }
+    private void givenExistingDeckWithYesterdaySession() {
+        LocalDate lastSession = LocalDate.of(2022, 11, 10);
+        given(deckRepository.findById(DECK_ID_VO))
+                .willReturn(DeckMother.withSession(lastSession));
+    }
 
-  private void givenExistingDeck() {
-    given(deckRepository.findById(DECK_ID_VO))
-        .willReturn(DeckMother.withSession(null));
-  }
+    private void givenExistingDeckWithOldSession() {
+        LocalDate lastSession = LocalDate.of(2022, 11, 5);
+        given(deckRepository.findById(DECK_ID_VO))
+                .willReturn(DeckMother.withSession(lastSession));
+    }
 
-  private void givenExistingDeckWithYesterdaySession() {
-    LocalDate lastSession = LocalDate.of(2022, 11, 10);
-    given(deckRepository.findById(DECK_ID_VO))
-        .willReturn(DeckMother.withSession(lastSession));
-  }
+    private void givenExistingDeckWithTodaySession() {
+        LocalDate lastSession = LocalDate.of(2022, 11, 11);
+        given(deckRepository.findById(DECK_ID_VO))
+                .willReturn(DeckMother.withSession(lastSession));
+    }
 
-  private void givenExistingDeckWithOldSession() {
-    LocalDate lastSession = LocalDate.of(2022, 11, 5);
-    given(deckRepository.findById(DECK_ID_VO))
-        .willReturn(DeckMother.withSession(lastSession));
-  }
+    private void verifyDeckSavedWithSessionStarted() {
+        ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository, times(1)).save(captor.capture());
+        Deck savedDeck = captor.getValue();
+        assertThat(savedDeck.session()).isEqualTo(LocalDate.of(2022, 11, 11));
+    }
 
-  private void givenExistingDeckWithTodaySession() {
-    LocalDate lastSession = LocalDate.of(2022, 11, 11);
-    given(deckRepository.findById(DECK_ID_VO))
-        .willReturn(DeckMother.withSession(lastSession));
-  }
+    private void verifyDeckSavedWithoutRotatingBoxes() {
+        ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository, times(1)).save(captor.capture());
+        Deck savedDeck = captor.getValue();
+        assertThat(savedDeck.unansweredCards()).containsExactly("A");
+        assertThat(savedDeck.cardsInRedBox()).containsExactly("B");
+        assertThat(savedDeck.cardsInOrangeBox()).containsExactly("C");
+        assertThat(savedDeck.cardsInGreenBox()).containsExactly("D");
+    }
 
-  private void verifyDeckSavedWithSessionStarted() {
-    ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
-    verify(deckRepository, times(1)).save(captor.capture());
-    Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.session()).isEqualTo(LocalDate.of(2022, 11, 11));
-  }
+    private void verifyDeckSavedWithBoxRotatedOnce() {
+        ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository, times(1)).save(captor.capture());
+        Deck savedDeck = captor.getValue();
+        assertThat(savedDeck.unansweredCards()).containsExactly("A");
+        assertThat(savedDeck.cardsInRedBox()).containsExactly("B", "C");
+        assertThat(savedDeck.cardsInOrangeBox()).containsExactly("D");
+        assertThat(savedDeck.cardsInGreenBox()).isEmpty();
+    }
 
-  private void verifyDeckSavedWithoutRotatingBoxes() {
-    ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
-    verify(deckRepository, times(1)).save(captor.capture());
-    Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unansweredCards()).containsExactly("A");
-    assertThat(savedDeck.cardsInRedBox()).containsExactly("B");
-    assertThat(savedDeck.cardsInOrangeBox()).containsExactly("C");
-    assertThat(savedDeck.cardsInGreenBox()).containsExactly("D");
-  }
-
-  private void verifyDeckSavedWithBoxRotatedOnce() {
-    ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
-    verify(deckRepository, times(1)).save(captor.capture());
-    Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unansweredCards()).containsExactly("A");
-    assertThat(savedDeck.cardsInRedBox()).containsExactly("B", "C");
-    assertThat(savedDeck.cardsInOrangeBox()).containsExactly("D");
-    assertThat(savedDeck.cardsInGreenBox()).isEmpty();
-  }
-
-  private void verifyDeckSavedWithBoxRotatedTwice() {
-    ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
-    verify(deckRepository, times(1)).save(captor.capture());
-    Deck savedDeck = captor.getValue();
-    assertThat(savedDeck.unansweredCards()).containsExactly("A");
-    assertThat(savedDeck.cardsInRedBox()).containsExactly("B", "C", "D");
-    assertThat(savedDeck.cardsInOrangeBox()).isEmpty();
-    assertThat(savedDeck.cardsInGreenBox()).isEmpty();
-  }
-
-  private static StartSessionCommand startSessionCommand() {
-    return new StartSessionCommand(DECK_ID, USER_ID);
-  }
+    private void verifyDeckSavedWithBoxRotatedTwice() {
+        ArgumentCaptor<Deck> captor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository, times(1)).save(captor.capture());
+        Deck savedDeck = captor.getValue();
+        assertThat(savedDeck.unansweredCards()).containsExactly("A");
+        assertThat(savedDeck.cardsInRedBox()).containsExactly("B", "C", "D");
+        assertThat(savedDeck.cardsInOrangeBox()).isEmpty();
+        assertThat(savedDeck.cardsInGreenBox()).isEmpty();
+    }
 }

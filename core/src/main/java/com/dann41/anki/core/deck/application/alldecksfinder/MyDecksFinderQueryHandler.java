@@ -1,7 +1,5 @@
 package com.dann41.anki.core.deck.application.alldecksfinder;
 
-import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderQuery;
-import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderResponse;
 import com.dann41.anki.shared.application.QueryHandler;
 
 public class MyDecksFinderQueryHandler implements QueryHandler<MyDecksFinderQuery, MyDecksFinderResponse> {

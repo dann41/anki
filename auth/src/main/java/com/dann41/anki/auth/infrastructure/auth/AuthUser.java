@@ -1,6 +1,6 @@
 package com.dann41.anki.auth.infrastructure.auth;
 
-import com.dann41.anki.core.user.domain.User;
+import com.dann41.anki.core.user.application.userfinder.FindUserResponse;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +10,9 @@ import java.util.List;
 
 public class AuthUser implements UserDetails {
 
-  private final User user;
+  private final FindUserResponse user;
 
-  public AuthUser(User user) {
+  public AuthUser(FindUserResponse user) {
     this.user = user;
   }
 
@@ -28,11 +28,11 @@ public class AuthUser implements UserDetails {
 
   @Override
   public String getUsername() {
-    return user.userName();
+    return user.username();
   }
 
   public String getId() {
-    return user.userId();
+    return user.id();
   }
 
   @Override

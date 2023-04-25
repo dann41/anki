@@ -1,6 +1,5 @@
 package com.dann41.anki.core.deck.application.cardsolver;
 
-import com.dann41.anki.core.deck.cardsolver.SolveCardCommand;
 import com.dann41.anki.shared.application.CommandHandler;
 
 public class SolveCardCommandHandler implements CommandHandler<SolveCardCommand> {
