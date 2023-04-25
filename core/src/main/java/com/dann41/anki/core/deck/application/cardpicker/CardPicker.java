@@ -1,5 +1,7 @@
 package com.dann41.anki.core.deck.application.cardpicker;
 
+import com.dann41.anki.core.deck.cardpicker.CardPickerQuery;
+import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckFinder;
 import com.dann41.anki.core.deck.domain.DeckId;
@@ -20,14 +22,14 @@ public class CardPicker {
     this.clock = clock;
   }
 
-  public CardResponse execute(CardPickerQuery query) {
+  public CardPickerResponse execute(CardPickerQuery query) {
       Deck deck = deckFinder.execute(new DeckId(query.deckId()), new UserId(query.userId()));
     Question question = deck.pickNextQuestion(LocalDate.now(clock));
     if (question == null) {
       return null;
     }
 
-    return new CardResponse(
+    return new CardPickerResponse(
         question.id(),
         question.question(),
         question.answer()

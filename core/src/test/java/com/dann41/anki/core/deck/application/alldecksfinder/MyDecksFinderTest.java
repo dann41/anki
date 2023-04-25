@@ -1,5 +1,8 @@
 package com.dann41.anki.core.deck.application.alldecksfinder;
 
+import com.dann41.anki.core.deck.alldecksfinder.DeckSummary;
+import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderQuery;
+import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderResponse;
 import com.dann41.anki.core.deck.domain.DeckMother;
 import com.dann41.anki.core.deck.domain.DeckRepository;
 import com.dann41.anki.core.user.domain.UserId;
@@ -32,7 +35,7 @@ class MyDecksFinderTest {
     given(deckRepository.findByUserId(new UserId(USER_ID)))
         .willReturn(List.of(DeckMother.defaultDeck()));
 
-    DecksResponse response = myDecksFinder.execute(new MyDecksFinderQuery(USER_ID));
+    MyDecksFinderResponse response = myDecksFinder.execute(new MyDecksFinderQuery(USER_ID));
 
     assertThat(response.decks()).hasSize(1);
     assertThat(response.decks())

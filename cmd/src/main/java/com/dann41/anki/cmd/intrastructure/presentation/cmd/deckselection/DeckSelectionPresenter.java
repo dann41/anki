@@ -2,8 +2,8 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckselection;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
-import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinder;
-import com.dann41.anki.core.deck.application.alldecksfinder.MyDecksFinderQuery;
+import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderQuery;
+import com.dann41.anki.shared.application.QueryBus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +11,15 @@ public class DeckSelectionPresenter
     extends BasePresenter<DeckSelectionContract.View>
     implements DeckSelectionContract.Presenter {
 
-  private final MyDecksFinder myDecksFinder;
   private final SessionInteractor sessionInteractor;
+  private final QueryBus queryBus;
 
-  public DeckSelectionPresenter(MyDecksFinder myDecksFinder, SessionInteractor sessionInteractor) {
-    this.myDecksFinder = myDecksFinder;
+  public DeckSelectionPresenter(
+          SessionInteractor sessionInteractor,
+          QueryBus queryBus
+  ) {
     this.sessionInteractor = sessionInteractor;
+    this.queryBus = queryBus;
   }
 
   @Override
@@ -27,7 +30,7 @@ public class DeckSelectionPresenter
       return;
     }
 
-    var decksResponse = myDecksFinder.execute(new MyDecksFinderQuery(session.userId()));
+    var decksResponse = queryBus.publish(new MyDecksFinderQuery(session.userId()));
     view.displayDecks(decksResponse.decks());
   }
 

@@ -2,7 +2,7 @@ package com.dann41.anki.core.cardcollection.application.allcollectionsfinder;
 
 import com.dann41.anki.shared.application.QueryHandler;
 
-public class AllCollectionsQueryHandler implements QueryHandler<AllCollectionsQuery, CollectionsResponse> {
+public class AllCollectionsQueryHandler implements QueryHandler<AllCollectionsQuery, AllCollectionsResponse> {
 
     private final AllCollectionsFinder allCollectionsFinder;
 
@@ -16,7 +16,7 @@ public class AllCollectionsQueryHandler implements QueryHandler<AllCollectionsQu
     }
 
     @Override
-    public CollectionsResponse handle(AllCollectionsQuery query) {
+    public AllCollectionsResponse handle(AllCollectionsQuery query) {
         return allCollectionsFinder.execute();
     }
 }

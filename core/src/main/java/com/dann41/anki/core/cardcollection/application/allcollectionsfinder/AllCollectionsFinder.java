@@ -13,8 +13,8 @@ public class AllCollectionsFinder {
     this.cardCollectionRepository = cardCollectionRepository;
   }
 
-  public CollectionsResponse execute() {
-    return new CollectionsResponse(
+  public AllCollectionsResponse execute() {
+    return new AllCollectionsResponse(
         cardCollectionRepository.findAll()
             .stream()
             .map(this::toCollectionSummary)

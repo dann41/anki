@@ -4,7 +4,7 @@ import com.dann41.anki.shared.application.QueryResponse;
 
 import java.util.List;
 
-public record CollectionsResponse(List<CardCollectionSummary> collections) implements QueryResponse {
+public record AllCollectionsResponse(List<CardCollectionSummary> collections) implements QueryResponse {
 
 }
 

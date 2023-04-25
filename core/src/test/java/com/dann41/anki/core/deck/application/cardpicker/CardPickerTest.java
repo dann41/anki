@@ -1,5 +1,7 @@
 package com.dann41.anki.core.deck.application.cardpicker;
 
+import com.dann41.anki.core.deck.cardpicker.CardPickerQuery;
+import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckMother;
@@ -41,9 +43,9 @@ class CardPickerTest {
   public void givenExistingDeckWithUnansweredCardsShouldReturnNextCard() {
     givenDeck(DeckMother.defaultDeck());
 
-    CardResponse response = cardPicker.execute(cardPickerQuery());
+    CardPickerResponse response = cardPicker.execute(cardPickerQuery());
 
-    assertThat(response).isEqualTo(new CardResponse("A", "A", "Answer A"));
+    assertThat(response).isEqualTo(new CardPickerResponse("A", "A", "Answer A"));
   }
 
   @Test
@@ -56,7 +58,7 @@ class CardPickerTest {
   public void givenExistingDeckWithoutPendingCardsShouldReturnNull() {
     givenDeck(DeckMother.withoutPendingForToday());
 
-    CardResponse response = cardPicker.execute(cardPickerQuery());
+    CardPickerResponse response = cardPicker.execute(cardPickerQuery());
 
     assertThat(response).isNull();
   }

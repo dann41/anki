@@ -4,7 +4,7 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
-import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
+import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -43,12 +43,12 @@ public class DeckPlayerView extends BaseView implements DeckPlayerContract.View 
   }
 
   @Override
-  public void displayCard(CardResponse cardResponse) {
-    System.out.println("NEXT QUESTION: " + cardResponse.question());
+  public void displayCard(CardPickerResponse cardPickerResponse) {
+    System.out.println("NEXT QUESTION: " + cardPickerResponse.question());
     countDown("Answer will reveal in 5 seconds.", 5);
 
-    System.out.println("Answer is: " + cardResponse.answer());
-    requestBoxCategorization(cardResponse.id());
+    System.out.println("Answer is: " + cardPickerResponse.answer());
+    requestBoxCategorization(cardPickerResponse.id());
   }
 
   @Override

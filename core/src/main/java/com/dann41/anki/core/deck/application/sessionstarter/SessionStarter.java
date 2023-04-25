@@ -4,6 +4,7 @@ import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckFinder;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckRepository;
+import com.dann41.anki.core.deck.sessionstarter.StartSessionCommand;
 import com.dann41.anki.core.user.domain.UserId;
 
 import java.time.Clock;

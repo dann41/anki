@@ -4,17 +4,15 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.ViewContext;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BasePresenter;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.model.session.SessionInteractor;
-import com.dann41.anki.core.deck.application.cardpicker.CardPicker;
-import com.dann41.anki.core.deck.application.cardpicker.CardPickerQuery;
-import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
-import com.dann41.anki.core.deck.application.cardsolver.CardSolver;
-import com.dann41.anki.core.deck.application.cardsolver.SolveCardCommand;
-import com.dann41.anki.core.deck.application.sessionstarter.SessionStarter;
-import com.dann41.anki.core.deck.application.sessionstarter.StartSessionCommand;
-import com.dann41.anki.core.deck.application.statefinder.StateFinder;
-import com.dann41.anki.core.deck.application.statefinder.StateFinderQuery;
-import com.dann41.anki.core.deck.application.statefinder.StateResponse;
+import com.dann41.anki.core.deck.cardpicker.CardPickerQuery;
+import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
+import com.dann41.anki.core.deck.cardsolver.SolveCardCommand;
 import com.dann41.anki.core.deck.domain.DeckNotFoundException;
+import com.dann41.anki.core.deck.sessionstarter.StartSessionCommand;
+import com.dann41.anki.core.deck.statefinder.FindStatusQuery;
+import com.dann41.anki.core.deck.statefinder.FindStatusResponse;
+import com.dann41.anki.shared.application.CommandBus;
+import com.dann41.anki.shared.application.QueryBus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -33,25 +31,19 @@ public class DeckPlayerPresenter
     BOX_MAPPER.put("r", "red");
   }
 
-  private final SessionStarter sessionStarter;
-  private final CardPicker cardPicker;
-  private final CardSolver cardSolver;
-  private final StateFinder stateFinder;
+  private final CommandBus commandBus;
+  private final QueryBus queryBus;
   private final SessionInteractor sessionInteractor;
 
   private final ViewContext viewContext = new ViewContext();
 
   public DeckPlayerPresenter(
-      SessionStarter sessionStarter,
-      CardPicker cardPicker,
-      CardSolver cardSolver,
-      StateFinder stateFinder,
-      SessionInteractor sessionInteractor
+          CommandBus commandBus,
+          QueryBus queryBus,
+          SessionInteractor sessionInteractor
   ) {
-    this.sessionStarter = sessionStarter;
-    this.cardPicker = cardPicker;
-    this.cardSolver = cardSolver;
-    this.stateFinder = stateFinder;
+    this.commandBus = commandBus;
+    this.queryBus = queryBus;
     this.sessionInteractor = sessionInteractor;
   }
 
@@ -74,7 +66,7 @@ public class DeckPlayerPresenter
       return;
     }
 
-    cardSolver.execute(new SolveCardCommand(viewContext.currentDeckId(), viewContext.userId(), cardId, boxName));
+    commandBus.publish(new SolveCardCommand(viewContext.currentDeckId(), viewContext.userId(), cardId, boxName));
 
     displayNextCard();
   }
@@ -82,7 +74,7 @@ public class DeckPlayerPresenter
   private void startSession() {
     var deckId = viewContext.currentDeckId();
     try {
-      sessionStarter.execute(new StartSessionCommand(deckId, viewContext.userId()));
+      commandBus.publish(new StartSessionCommand(deckId, viewContext.userId()));
       viewContext.playDeck(deckId);
     } catch (DeckNotFoundException e) {
       view.displayDeckNotFound(deckId);
@@ -91,11 +83,11 @@ public class DeckPlayerPresenter
   }
 
   private AnkiState retrieveState() {
-    StateResponse stateResponse = stateFinder.execute(new StateFinderQuery(
+    FindStatusResponse findStatusResponse = queryBus.publish(new FindStatusQuery(
         viewContext.currentDeckId(),
         viewContext.userId()
     ));
-    return toAnkiState(stateResponse);
+    return toAnkiState(findStatusResponse);
   }
 
   private void displayState() {
@@ -103,7 +95,7 @@ public class DeckPlayerPresenter
   }
 
   private void displayNextCard() {
-    CardResponse nextCard = cardPicker.execute(
+    CardPickerResponse nextCard = queryBus.publish(
         new CardPickerQuery(viewContext.currentDeckId(), viewContext.userId())
     );
 
@@ -120,14 +112,14 @@ public class DeckPlayerPresenter
     navigator.back();
   }
 
-  private AnkiState toAnkiState(StateResponse stateResponse) {
+  private AnkiState toAnkiState(FindStatusResponse findStatusResponse) {
     return new AnkiState(
         viewContext.currentDeckId(),
-        stateResponse.totalCards(),
-        stateResponse.redCards(),
-        stateResponse.orangeCards(),
-        stateResponse.greenCards(),
-        stateResponse.lastSession()
+        findStatusResponse.totalCards(),
+        findStatusResponse.redCards(),
+        findStatusResponse.orangeCards(),
+        findStatusResponse.greenCards(),
+        findStatusResponse.lastSession()
     );
   }
 

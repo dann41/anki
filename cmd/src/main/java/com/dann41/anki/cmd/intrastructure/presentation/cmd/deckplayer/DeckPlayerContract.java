@@ -2,13 +2,13 @@ package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckplayer;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.AnkiState;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
-import com.dann41.anki.core.deck.application.cardpicker.CardResponse;
+import com.dann41.anki.core.deck.cardpicker.CardPickerResponse;
 
 public interface DeckPlayerContract {
   interface View extends Core.View {
     void displayState(AnkiState ankiState);
 
-    void displayCard(CardResponse cardResponse);
+    void displayCard(CardPickerResponse cardPickerResponse);
 
     void requestBoxCategorization(String cardId);
 

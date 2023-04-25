@@ -1,5 +1,8 @@
 package com.dann41.anki.core.deck.application.alldecksfinder;
 
+import com.dann41.anki.core.deck.alldecksfinder.DeckSummary;
+import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderQuery;
+import com.dann41.anki.core.deck.alldecksfinder.MyDecksFinderResponse;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckRepository;
 import com.dann41.anki.core.user.domain.UserId;
@@ -14,8 +17,8 @@ public class MyDecksFinder {
     this.deckRepository = deckRepository;
   }
 
-  public DecksResponse execute(MyDecksFinderQuery query) {
-    return new DecksResponse(
+  public MyDecksFinderResponse execute(MyDecksFinderQuery query) {
+    return new MyDecksFinderResponse(
         deckRepository.findByUserId(new UserId(query.userId()))
             .stream()
             .map(this::toDeckSummary)

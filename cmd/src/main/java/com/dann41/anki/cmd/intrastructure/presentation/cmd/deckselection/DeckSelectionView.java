@@ -5,7 +5,7 @@ import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdMenuItem;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.CmdTools;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.BaseView;
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Navigator;
-import com.dann41.anki.core.deck.application.alldecksfinder.DeckSummary;
+import com.dann41.anki.core.deck.alldecksfinder.DeckSummary;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dann41.anki.core.deck.application.alldecksfinder;
+package com.dann41.anki.core.deck.alldecksfinder;
 
 import java.time.LocalDate;
 

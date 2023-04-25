@@ -1,5 +1,6 @@
 package com.dann41.anki.core.deck.application.cardsolver;
 
+import com.dann41.anki.core.deck.cardsolver.SolveCardCommand;
 import com.dann41.anki.core.deck.domain.Deck;
 import com.dann41.anki.core.deck.domain.DeckId;
 import com.dann41.anki.core.deck.domain.DeckMother;

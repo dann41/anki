@@ -1,7 +1,7 @@
 package com.dann41.anki.cmd.intrastructure.presentation.cmd.deckselection;
 
 import com.dann41.anki.cmd.intrastructure.presentation.cmd.core.Core;
-import com.dann41.anki.core.deck.application.alldecksfinder.DeckSummary;
+import com.dann41.anki.core.deck.alldecksfinder.DeckSummary;
 
 import java.util.List;
 
