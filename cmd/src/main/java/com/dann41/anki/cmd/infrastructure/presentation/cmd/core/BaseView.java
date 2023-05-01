@@ -7,6 +7,7 @@ public abstract class BaseView implements Core.View {
     this.navigator = navigator;
   }
 
+  @SuppressWarnings("unchecked")
   protected <T extends Core.View> void configurePresenter(Core.Presenter<T> presenter) {
     presenter.onAttachView((T) this);
     presenter.setNavigator(navigator);
