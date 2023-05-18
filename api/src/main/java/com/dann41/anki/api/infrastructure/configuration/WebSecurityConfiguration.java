@@ -25,7 +25,7 @@ public class WebSecurityConfiguration {
     ) {
         http
                 .authorizeExchange((exchangeSpec) -> exchangeSpec
-                        .pathMatchers("/hello", "/login").permitAll()
+                        .pathMatchers("/hello", "/login", "/signup").permitAll()
                         .anyExchange().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

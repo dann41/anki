@@ -10,6 +10,9 @@ import java.time.Clock;
 @Configuration
 public class SystemConfiguration {
 
+  public SystemConfiguration() {
+    System.out.println("System config");
+  }
   @Bean
   Clock clock() {
     return Clock.systemUTC();

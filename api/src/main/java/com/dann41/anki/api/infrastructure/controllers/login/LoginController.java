@@ -28,6 +28,10 @@ public class LoginController {
         return Mono.fromCallable(() -> {
             commandBus.publish(new AuthenticateUserCommand(loginRequest.username(), loginRequest.password()));
             var user = queryBus.publish(new FindUserByUsernameQuery(loginRequest.username()));
+            if (user == null) {
+
+            }
+
             var jwt = tokenService.generate(user.id(), user.username());
 
             return new LoginResponse(

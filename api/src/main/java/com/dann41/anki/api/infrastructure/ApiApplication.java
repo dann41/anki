@@ -8,7 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(
-    scanBasePackageClasses = {SharedModule.class, CoreApiModule.class, ApiConfiguration.class, AuthModule.class}
+    scanBasePackageClasses = {
+            CoreApiModule.class,
+            SharedModule.class,
+            AuthModule.class,
+            ApiConfiguration.class
+    }
 )
 public class ApiApplication {
 

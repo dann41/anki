@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-core:9.8.3'
 
     implementation project(':core-api')
+    implementation project(':core')
     implementation project(':shared')
 
 }

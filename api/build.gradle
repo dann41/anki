@@ -11,8 +11,9 @@ bootJar {
 }
 
 dependencies {
-    implementation(project(":shared"))
-    implementation(project(":auth"))
+    implementation project(":shared")
+    implementation project(":auth")
+    implementation project(':core')
     implementation project(':core-api')
 
     implementation 'org.springframework.boot:spring-boot-starter'

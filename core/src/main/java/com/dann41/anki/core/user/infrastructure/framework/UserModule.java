@@ -4,6 +4,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = {"com.dann41.anki.core.user.infrastructure.framework"})
+@ComponentScan(basePackageClasses = UserModule.class)
 public class UserModule {
 }
