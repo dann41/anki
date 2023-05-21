@@ -1,6 +1,5 @@
 package com.dann41.anki.api.infrastructure.controllers.deck.create;
 
-import com.dann41.anki.auth.infrastructure.auth.AuthUser;
 import com.dann41.anki.core.deck.application.deckcreator.CreateDeckCommand;
 import com.dann41.anki.shared.application.CommandBus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.dann41.anki.auth.infrastructure.auth.AuthUtils.userIdFrom;
 
 @RestController
 public class CreateDeckController {
@@ -25,7 +26,7 @@ public class CreateDeckController {
       @RequestBody CreateDeckRequest request,
       Authentication authentication
   ) {
-    String userId = ((AuthUser) authentication.getPrincipal()).getId();
+    String userId = userIdFrom(authentication);
 
     commandBus.publish(new CreateDeckCommand(
         deckId,

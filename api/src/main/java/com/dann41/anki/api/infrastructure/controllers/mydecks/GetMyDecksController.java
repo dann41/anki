@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.dann41.anki.auth.infrastructure.auth.AuthUtils.userIdFrom;
+
 @RestController
 public class GetMyDecksController {
 
@@ -23,7 +25,7 @@ public class GetMyDecksController {
   @GetMapping("/api/mydecks")
   public Mono<List<DeckDto>> getMyDecks(Authentication authentication) {
     return Mono.fromCallable(() -> {
-      String userId = ((AuthUser) authentication.getPrincipal()).getId();
+      String userId = userIdFrom(authentication);
       var queryResponse = queryBus.publish(new MyDecksFinderQuery(userId));
       return queryResponse.decks()
           .stream()

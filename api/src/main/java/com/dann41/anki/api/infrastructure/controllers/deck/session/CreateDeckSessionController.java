@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.dann41.anki.auth.infrastructure.auth.AuthUtils.userIdFrom;
+
 @RestController
 public class CreateDeckSessionController {
 
@@ -23,7 +25,7 @@ public class CreateDeckSessionController {
       @PathVariable("deckId") String deckId,
       Authentication authentication
   ) {
-    String userId = ((AuthUser) authentication.getPrincipal()).getId();
+    String userId = userIdFrom(authentication);
     commandBus.publish(new StartSessionCommand(
         deckId,
         userId

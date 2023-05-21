@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SignUpController {
 
-    private final CommandBus commandBus;
-    private final PasswordEncoder passwordEncoder;
+  private final CommandBus commandBus;
+  private final PasswordEncoder passwordEncoder;
 
-    public SignUpController(CommandBus commandBus, PasswordEncoder passwordEncoder) {
-        this.commandBus = commandBus;
-        this.passwordEncoder = passwordEncoder;
-    }
+  public SignUpController(CommandBus commandBus, PasswordEncoder passwordEncoder) {
+    this.commandBus = commandBus;
+    this.passwordEncoder = passwordEncoder;
+  }
 
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(
-            @RequestBody SignUpRequest signUpRequest
-    ) {
-        commandBus.publish(
-                new RegisterUserCommand(
-                        signUpRequest.username(),
-                        passwordEncoder.encode(signUpRequest.password())
-                )
-        );
-        return ResponseEntity.status(201).build();
-    }
+  @PostMapping("/signup")
+  public ResponseEntity<Void> signUp(
+      @RequestBody SignUpRequest signUpRequest
+  ) {
+    commandBus.publish(
+        new RegisterUserCommand(
+            signUpRequest.username(),
+            passwordEncoder.encode(signUpRequest.password())
+        )
+    );
+    return ResponseEntity.status(201).build();
+  }
 }
