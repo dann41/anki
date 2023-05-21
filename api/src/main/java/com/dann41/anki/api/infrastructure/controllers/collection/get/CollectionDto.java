@@ -1,4 +1,4 @@
-package com.dann41.anki.api.infrastructure.controllers.collections.get;
+package com.dann41.anki.api.infrastructure.controllers.collection.get;
 
 public record CollectionDto(
         String id,

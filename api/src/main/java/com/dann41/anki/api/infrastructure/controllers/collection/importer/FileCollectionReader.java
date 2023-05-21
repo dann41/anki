@@ -1,4 +1,4 @@
-package com.dann41.anki.api.infrastructure.controllers.collections.importer;
+package com.dann41.anki.api.infrastructure.controllers.collection.importer;
 
 import com.dann41.anki.core.cardcollection.application.collectionsimporter.CardRequest;
 import org.springframework.core.io.buffer.DataBuffer;
