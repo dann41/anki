@@ -14,22 +14,22 @@ import java.util.stream.Collectors;
 @RestController
 public class GetMyDecksController {
 
-    private final QueryBus queryBus;
+  private final QueryBus queryBus;
 
-    public GetMyDecksController(QueryBus queryBus) {
-        this.queryBus = queryBus;
-    }
+  public GetMyDecksController(QueryBus queryBus) {
+    this.queryBus = queryBus;
+  }
 
-    @GetMapping("/api/mydecks")
-    public Mono<List<DeckDto>> getMyDecks(Authentication authentication) {
-        return Mono.fromCallable(() -> {
-            String userId = ((AuthUser) authentication.getPrincipal()).getId();
-            var queryResponse = queryBus.publish(new MyDecksFinderQuery(userId));
-            return queryResponse.decks()
-                    .stream()
-                    .map(DeckDto::fromSummary)
-                    .collect(Collectors.toList());
-        });
-    }
+  @GetMapping("/api/mydecks")
+  public Mono<List<DeckDto>> getMyDecks(Authentication authentication) {
+    return Mono.fromCallable(() -> {
+      String userId = ((AuthUser) authentication.getPrincipal()).getId();
+      var queryResponse = queryBus.publish(new MyDecksFinderQuery(userId));
+      return queryResponse.decks()
+          .stream()
+          .map(DeckDto::fromSummary)
+          .collect(Collectors.toList());
+    });
+  }
 
 }
