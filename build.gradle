@@ -6,7 +6,6 @@ group 'com.github.dann41'
 version "1.0.0-SNAPSHOT"
 
 subprojects {
-    apply plugin: 'idea'
     apply plugin: 'java'
 
     group = rootProject.group
