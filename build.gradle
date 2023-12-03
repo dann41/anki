@@ -19,8 +19,10 @@ subprojects {
         useJUnitPlatform()
     }
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
     dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
