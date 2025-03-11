@@ -25,7 +25,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    runtimeOnly("org.postgresql:postgresql:42.5.1")
+    runtimeOnly("org.postgresql:postgresql:42.7.5")
     implementation("org.flywaydb:flyway-core:11.3.4")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

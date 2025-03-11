@@ -11,7 +11,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-core")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    implementation("org.postgresql:postgresql:42.5.1")
+    implementation("org.postgresql:postgresql:42.7.5")
     implementation("org.flywaydb:flyway-core:11.3.4")
 
     implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
