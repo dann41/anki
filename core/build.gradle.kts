@@ -14,7 +14,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.5.1")
     implementation("org.flywaydb:flyway-core:11.3.4")
 
-    implementation("com.vladmihalcea:hibernate-types-60:2.20.0")
+    implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3")
 }
 
