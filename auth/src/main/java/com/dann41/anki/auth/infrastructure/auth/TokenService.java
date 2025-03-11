@@ -3,7 +3,6 @@ package com.dann41.anki.auth.infrastructure.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.DeserializationException;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -40,13 +39,13 @@ public class TokenService {
     );
 
     return Jwts.builder()
-        .setIssuer("anki")
-        .setSubject(userId)
-        .setClaims(Map.of(
+        .issuer("anki")
+        .subject(userId)
+        .claims(Map.of(
             "userId", userId,
             "username", username
         ))
-        .setExpiration(expirationDate)
+        .expiration(expirationDate)
         .signWith(privateKey)
         .compact();
   }
@@ -54,11 +53,11 @@ public class TokenService {
   public JwtAuthenticationToken verify(String jwt) {
     Claims claims;
     try {
-      claims = Jwts.parserBuilder()
-              .setSigningKey(publicKey)
+      claims = Jwts.parser()
+              .verifyWith(publicKey)
               .build()
-              .parseClaimsJws(jwt)
-              .getBody();
+              .parseSignedClaims(jwt)
+              .getPayload();
     } catch (JwtException jwtException) {
       throw new InvalidJwtException(jwt, jwtException);
     }
