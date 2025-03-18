@@ -32,7 +32,7 @@ subprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-params")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.assertj:assertj-core:3.27.3")
-        testImplementation("org.mockito:mockito-core:5.16.0")
+        testImplementation("org.mockito:mockito-core:5.16.1")
         testImplementation("org.mockito:mockito-junit-jupiter:5.16.0")
     }
 }
