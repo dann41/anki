@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.0")
 }
 
 tasks.bootJar {
