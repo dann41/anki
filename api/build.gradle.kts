@@ -26,10 +26,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     runtimeOnly("org.postgresql:postgresql:42.7.5")
-    implementation("org.flywaydb:flyway-core:11.4.1")
+    implementation("org.flywaydb:flyway-core:11.7.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test:3.7.4")
+    testImplementation("io.projectreactor:reactor-test:3.7.6")
 }
 
 tasks.getByName("run", JavaExec::class) {
