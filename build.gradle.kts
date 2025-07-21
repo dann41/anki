@@ -33,6 +33,6 @@ subprojects {
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.assertj:assertj-core:3.27.3")
         testImplementation("org.mockito:mockito-core:5.18.0")
-        testImplementation("org.mockito:mockito-junit-jupiter:5.17.0")
+        testImplementation("org.mockito:mockito-junit-jupiter:5.18.0")
     }
 }
