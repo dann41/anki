@@ -15,7 +15,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:11.10.3")
 
     implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.2")
 }
 
 tasks.bootJar {
