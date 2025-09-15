@@ -29,7 +29,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:11.12.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test:3.7.9")
+    testImplementation("io.projectreactor:reactor-test:3.7.11")
 }
 
 tasks.getByName("run", JavaExec::class) {
